@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pengecekan Inventaris Guru</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6f8;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px;
+      padding-bottom: 110px;
+    }
+
+    .header {
+      background: #2563eb;
+      color: white;
+      padding: 22px;
+      border-radius: 18px;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-size: 23px;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .top-links {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .top-links a {
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      outline: none;
+      font-size: 15px;
+      background: white;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #2563eb;
+    }
+
+    input:disabled {
+      background: #f3f4f6;
+      color: #9ca3af;
+    }
+
+    .room-info {
+      margin-top: 14px;
+      padding: 14px;
+      background: #eff6ff;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .room-info strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 18px 0 10px;
+    }
+
+    .section-header h2 {
+      font-size: 18px;
+    }
+
+    .asset-count {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .empty {
+      background: white;
+      border: 1px dashed #cbd5e1;
+      color: #94a3b8;
+      text-align: center;
+      padding: 36px 16px;
+      border-radius: 14px;
+    }
+
+    .asset-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .asset-table-wrap {
+      overflow-x: auto;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+    }
+
+    .asset-table {
+      width: 100%;
+      min-width: 820px;
+      border-collapse: collapse;
+    }
+
+    .asset-table th,
+    .asset-table td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .asset-table th {
+      background: #f8fafc;
+      color: #475569;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .asset-table tr:last-child td { border-bottom: 0; }
+    .asset-table .number { width: 48px; text-align: center; color: #64748b; }
+    .asset-table .asset-name { font-size: 14px; }
+    .asset-table .asset-meta { margin-top: 3px; }
+    .asset-table input,
+    .asset-table select,
+    .asset-table textarea { padding: 9px; font-size: 14px; }
+    .asset-table textarea { min-width: 190px; resize: vertical; }
+    .asset-table .exist-buttons { display: flex; margin: 0; min-width: 150px; }
+    .asset-table .exist-btn { padding: 8px 10px; font-size: 12px; }
+
+    @media (max-width: 640px) {
+      .asset-table-wrap { margin: 0 -2px; }
+    }
+
+    .asset-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .asset-name {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .asset-meta {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    .registered-badge {
+      background: #f3f4f6;
+      color: #4b5563;
+      padding: 6px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .exist-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .exist-btn {
+      border: 1px solid #d1d5db;
+      background: white;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .exist-btn.ada.active {
+      background: #dcfce7;
+      color: #166534;
+      border-color: #86efac;
+    }
+
+    .exist-btn.tidak.active {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fca5a5;
+    }
+
+    .qty-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .difference {
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+    }
+
+    .difference.same {
+      background: #f0fdf4;
+      color: #166534;
+    }
+
+    .difference.less {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .difference.more {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .summary {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .summary-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .summary-card small {
+      color: #6b7280;
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 22px;
+      margin-top: 5px;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 16px;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .submit-btn {
+      display: block;
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      border: 0;
+      background: #2563eb;
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .submit-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 560px) {
+      .qty-row {
+        grid-template-columns: 1fr;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .asset-top {
+        flex-direction: column;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+<div class="header">
+  <h1>Pengecekan Inventaris</h1>
+  <p>
+    Pilih ruangan, lalu periksa apakah aset tersedia dan isi jumlah aktual.
+  </p>
+  <div class="top-links">
+    <a href="admin.html">Admin</a>
+    <a href="index.html">Form Guru</a>
+  </div>
+</div>
+
+<div class="card">
+
+  <div class="field">
+    <label>Nama Guru / Petugas</label>
+
+    <input
+      type="text"
+      id="teacherName"
+      placeholder="Contoh: Budi Santoso"
+    />
+  </div>
+
+  <div class="field">
+    <label>Pilih Ruangan</label>
+
+    <select id="roomSelect" onchange="changeRoom()">
+      <option value="">-- Pilih ruangan --</option>
+    </select>
+  </div>
+
+  <div class="room-info" id="roomInfo">
+    <strong id="roomName"></strong>
+    <span id="roomDescription"></span>
+  </div>
+
+</div>
+
+<div class="summary" id="summary">
+
+  <div class="summary-card">
+    <small>Total Jenis Aset</small>
+    <strong id="summaryAssets">0</strong>
+  </div>
+
+  <div class="summary-card">
+    <small>Aset Ada</small>
+    <strong id="summaryExists">0</strong>
+  </div>
+
+  <div class="summary-card">
+    <small>Tidak Ada</small>
+    <strong id="summaryMissing">0</strong>
+  </div>
+
+</div>
+
+<div class="section-header">
+  <h2>Daftar Aset</h2>
+  <span class="asset-count" id="assetCount"></span>
+</div>
+
+<div id="assetList">
+
+  <div class="empty">
+    Pilih ruangan terlebih dahulu.
+  </div>
+
+</div>
+  </div>
+
+  <div class="bottom-bar">
+    <button
+      class="submit-btn"
+      id="submitButton"
+      onclick="submitInventory()"
+      disabled
+    >
+      Simpan Pemeriksaan
+    </button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+
+    const SUPABASE_URL = "https://txxtadcmtbccawumguho.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_In51sv-SXnnYLInFG7-o1w_t-A0qLFQ";
+    const supabaseReady =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_ANON_KEY.startsWith("ISI_");
+    const db = supabaseReady
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATA RUANGAN DUMMY
+    |--------------------------------------------------------------------------
+    */
+
+    let rooms = [
+      {
+        id: 1,
+        code: "R-001",
+        name: "Ruang Kelas 7A",
+        description: "Gedung A - Lantai 1"
+      },
+      {
+        id: 2,
+        code: "R-002",
+        name: "Ruang Kelas 7B",
+        description: "Gedung A - Lantai 1"
+      },
+      {
+        id: 3,
+        code: "R-003",
+        name: "Ruang Kelas 8A",
+        description: "Gedung A - Lantai 2"
+      },
+      {
+        id: 4,
+        code: "R-004",
+        name: "Laboratorium Komputer",
+        description: "Gedung B - Lantai 1"
+      },
+      {
+        id: 5,
+        code: "R-005",
+        name: "Laboratorium IPA",
+        description: "Gedung B - Lantai 2"
+      },
+      {
+        id: 6,
+        code: "R-006",
+        name: "Perpustakaan",
+        description: "Gedung C - Lantai 1"
+      },
+      {
+        id: 7,
+        code: "R-007",
+        name: "Ruang Guru",
+        description: "Gedung Utama"
+      },
+      {
+        id: 8,
+        code: "R-008",
+        name: "Ruang Kepala Sekolah",
+        description: "Gedung Utama"
+      },
+      {
+        id: 9,
+        code: "R-009",
+        name: "Ruang Tata Usaha",
+        description: "Gedung Utama"
+      },
+      {
+        id: 10,
+        code: "R-010",
+        name: "Ruang Multimedia",
+        description: "Gedung B - Lantai 2"
+      }
+    ];
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATA INVENTARIS DUMMY PER RUANGAN
+    |--------------------------------------------------------------------------
+    |
+    | registeredQty = jumlah yang tercatat di database/admin.
+    | actualQty     = jumlah yang ditemukan guru.
+    |
+    */
+
+    let inventoryByRoom = {
+
+      1: [
+        {
+          id: 101,
+          code: "AST-0001",
+          name: "Meja Guru",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 102,
+          code: "AST-0002",
+          name: "Kursi Guru",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 103,
+          code: "AST-0003",
+          name: "Meja Siswa",
+          registeredQty: 18,
+          actualQty: 18,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 104,
+          code: "AST-0004",
+          name: "Kursi Siswa",
+          registeredQty: 36,
+          actualQty: 36,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 105,
+          code: "AST-0005",
+          name: "Papan Tulis",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 106,
+          code: "AST-0006",
+          name: "Proyektor",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        }
+      ],
+
+      2: [
+        {
+          id: 201,
+          code: "AST-0010",
+          name: "Meja Guru",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 202,
+          code: "AST-0011",
+          name: "Kursi Guru",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 203,
+          code: "AST-0012",
+          name: "Meja Siswa",
+          registeredQty: 20,
+          actualQty: 20,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 204,
+          code: "AST-0013",
+          name: "Kursi Siswa",
+          registeredQty: 40,
+          actualQty: 40,
+          exists: true,
+          note: ""
+        }
+      ],
+
+      3: [
+        {
+          id: 301,
+          code: "AST-0020",
+          name: "Meja Guru",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 302,
+          code: "AST-0021",
+          name: "Meja Siswa",
+          registeredQty: 18,
+          actualQty: 18,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 303,
+          code: "AST-0022",
+          name: "Kursi Siswa",
+          registeredQty: 36,
+          actualQty: 36,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 304,
+          code: "AST-0023",
+          name: "Lemari Kelas",
+          registeredQty: 2,
+          actualQty: 2,
+          exists: true,
+          note: ""
+        }
+      ],
+
+      4: [
+        {
+          id: 401,
+          code: "AST-0030",
+          name: "Komputer Desktop",
+          registeredQty: 30,
+          actualQty: 30,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 402,
+          code: "AST-0031",
+          name: "Monitor",
+          registeredQty: 30,
+          actualQty: 30,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 403,
+          code: "AST-0032",
+          name: "Keyboard",
+          registeredQty: 30,
+          actualQty: 30,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 404,
+          code: "AST-0033",
+          name: "Mouse",
+          registeredQty: 30,
+          actualQty: 30,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 405,
+          code: "AST-0034",
+          name: "Proyektor",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 406,
+          code: "AST-0035",
+          name: "AC",
+          registeredQty: 2,
+          actualQty: 2,
+          exists: true,
+          note: ""
+        }
+      ],
+
+      5: [
+        {
+          id: 501,
+          code: "AST-0040",
+          name: "Meja Praktikum",
+          registeredQty: 8,
+          actualQty: 8,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 502,
+          code: "AST-0041",
+          name: "Kursi Praktikum",
+          registeredQty: 32,
+          actualQty: 32,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 503,
+          code: "AST-0042",
+          name: "Mikroskop",
+          registeredQty: 10,
+          actualQty: 10,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 504,
+          code: "AST-0043",
+          name: "Lemari Alat",
+          registeredQty: 4,
+          actualQty: 4,
+          exists: true,
+          note: ""
+        }
+      ],
+
+      6: [
+        {
+          id: 601,
+          code: "AST-0050",
+          name: "Rak Buku",
+          registeredQty: 12,
+          actualQty: 12,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 602,
+          code: "AST-0051",
+          name: "Meja Baca",
+          registeredQty: 10,
+          actualQty: 10,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 603,
+          code: "AST-0052",
+          name: "Kursi Baca",
+          registeredQty: 40,
+          actualQty: 40,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 604,
+          code: "AST-0053",
+          name: "Komputer",
+          registeredQty: 4,
+          actualQty: 4,
+          exists: true,
+          note: ""
+        }
+      ],
+
+      7: [
+        {
+          id: 701,
+          code: "AST-0060",
+          name: "Meja Guru",
+          registeredQty: 20,
+          actualQty: 20,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 702,
+          code: "AST-0061",
+          name: "Kursi Guru",
+          registeredQty: 20,
+          actualQty: 20,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 703,
+          code: "AST-0062",
+          name: "Lemari Arsip",
+          registeredQty: 6,
+          actualQty: 6,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 704,
+          code: "AST-0063",
+          name: "Printer",
+          registeredQty: 2,
+          actualQty: 2,
+          exists: true,
+          note: ""
+        }
+      ],
+
+      8: [
+        {
+          id: 801,
+          code: "AST-0070",
+          name: "Meja Kerja",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 802,
+          code: "AST-0071",
+          name: "Kursi Kerja",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 803,
+          code: "AST-0072",
+          name: "Laptop",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 804,
+          code: "AST-0073",
+          name: "Printer",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        }
+      ],
+
+      9: [
+        {
+          id: 901,
+          code: "AST-0080",
+          name: "Meja Kerja",
+          registeredQty: 6,
+          actualQty: 6,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 902,
+          code: "AST-0081",
+          name: "Kursi Kerja",
+          registeredQty: 6,
+          actualQty: 6,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 903,
+          code: "AST-0082",
+          name: "Komputer",
+          registeredQty: 5,
+          actualQty: 5,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 904,
+          code: "AST-0083",
+          name: "Printer",
+          registeredQty: 3,
+          actualQty: 3,
+          exists: true,
+          note: ""
+        }
+      ],
+
+      10: [
+        {
+          id: 1001,
+          code: "AST-0090",
+          name: "Smart TV",
+          registeredQty: 2,
+          actualQty: 2,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 1002,
+          code: "AST-0091",
+          name: "Proyektor",
+          registeredQty: 1,
+          actualQty: 1,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 1003,
+          code: "AST-0092",
+          name: "Speaker Aktif",
+          registeredQty: 4,
+          actualQty: 4,
+          exists: true,
+          note: ""
+        },
+        {
+          id: 1004,
+          code: "AST-0093",
+          name: "Laptop",
+          registeredQty: 5,
+          actualQty: 5,
+          exists: true,
+          note: ""
+        }
+      ]
+
+    };
+
+
+    let selectedRoomId = null;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | LOAD RUANGAN
+    |--------------------------------------------------------------------------
+    */
+
+    async function loadRooms() {
+
+      const select = document.getElementById("roomSelect");
+      select.innerHTML = `<option value="">-- Pilih ruangan --</option>`;
+
+      if (db) {
+        const { data, error } = await db
+          .from("rooms")
+          .select("id, code, name, description")
+          .order("name");
+
+        if (error) {
+          alert("Gagal mengambil data ruangan dari Supabase.");
+          console.error(error);
+        } else {
+          rooms = data || [];
+        }
+      }
+
+      rooms.forEach(room => {
+
+        const option = document.createElement("option");
+
+        option.value = room.id;
+
+        option.textContent =
+          `${room.name} - ${room.code}`;
+
+        select.appendChild(option);
+
+      });
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | PILIH RUANGAN
+    |--------------------------------------------------------------------------
+    */
+
+    function changeRoom() {
+
+      const value =
+        document.getElementById("roomSelect").value;
+
+      if (!value) {
+
+        selectedRoomId = null;
+
+        document.getElementById("roomInfo").style.display =
+          "none";
+
+        document.getElementById("summary").style.display =
+          "none";
+
+        document.getElementById("assetList").innerHTML = `
+          <div class="empty">
+            Pilih ruangan terlebih dahulu.
+          </div>
+        `;
+
+        document.getElementById("assetCount").textContent = "";
+
+        document.getElementById("submitButton").disabled =
+          true;
+
+        return;
+
+      }
+
+      selectedRoomId = Number(value);
+
+      const room = rooms.find(
+        item => item.id === selectedRoomId
+      );
+
+      document.getElementById("roomName").textContent =
+        `${room.name} (${room.code})`;
+
+      document.getElementById("roomDescription").textContent =
+        room.description;
+
+      document.getElementById("roomInfo").style.display =
+        "block";
+
+      document.getElementById("summary").style.display =
+        "grid";
+
+      document.getElementById("submitButton").disabled =
+        false;
+
+      loadAssets(selectedRoomId);
+
+    }
+
+    async function loadAssets(roomId) {
+      if (db) {
+        const { data, error } = await db
+          .from("assets")
+          .select("id, code, name, registered_qty, condition")
+          .eq("room_id", roomId)
+          .order("name");
+
+        if (error) {
+          alert("Gagal mengambil data aset dari Supabase.");
+          console.error(error);
+          inventoryByRoom[roomId] = [];
+        } else {
+          inventoryByRoom[roomId] = (data || []).map(asset => ({
+            id: asset.id,
+            code: asset.code,
+            name: asset.name,
+            registeredQty: Number(asset.registered_qty || 0),
+            actualQty: Number(asset.registered_qty || 0),
+            exists: Number(asset.registered_qty || 0) > 0,
+            condition: asset.condition || "Baik",
+            note: ""
+          }));
+        }
+      }
+
+      renderAssets();
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | RENDER ASET
+    |--------------------------------------------------------------------------
+    */
+
+    function renderAssets() {
+
+      const list = document.getElementById("assetList");
+
+      const assets =
+        inventoryByRoom[selectedRoomId] || [];
+
+      document.getElementById(
+        "assetCount"
+      ).textContent = `${assets.length} jenis aset`;
+
+      if (assets.length === 0) {
+
+        list.innerHTML = `
+          <div class="empty">
+            Belum ada data aset untuk ruangan ini.
+          </div>
+        `;
+
+        updateSummary();
+
+        return;
+
+      }
+
+      list.innerHTML = `<div class="asset-table-wrap"><table class="asset-table">
+        <thead><tr><th class="number">No</th><th>Nama Barang</th><th>Ada / Tidak</th><th>Jumlah</th><th>Kondisi</th><th>Catatan</th></tr></thead>
+        <tbody>${assets.map((asset, index) => {
+
+        const difference =
+          asset.actualQty - asset.registeredQty;
+
+        let differenceClass = "same";
+        let differenceText = "Jumlah sesuai";
+
+        if (!asset.exists) {
+
+          differenceClass = "less";
+          differenceText =
+            `Tidak ditemukan - Selisih -${asset.registeredQty}`;
+
+        } else if (difference < 0) {
+
+          differenceClass = "less";
+          differenceText =
+            `Kurang ${Math.abs(difference)} unit`;
+
+        } else if (difference > 0) {
+
+          differenceClass = "more";
+          differenceText =
+            `Lebih ${difference} unit`;
+
+        }
+
+        return `<tr>
+            <td class="number">${index + 1}</td>
+            <td><div class="asset-name">${asset.name}</div><div class="asset-meta">${asset.code} - Tercatat: ${asset.registeredQty}</div></td>
+            <td><div class="exist-buttons">
+
+              <button
+                type="button"
+                class="exist-btn ada ${
+                  asset.exists ? "active" : ""
+                }"
+                onclick="setExists(${index}, true)"
+              >
+                Ada
+              </button>
+
+              <button
+                type="button"
+                class="exist-btn tidak ${
+                  !asset.exists ? "active" : ""
+                }"
+                onclick="setExists(${index}, false)"
+              >
+                Tidak Ada
+              </button>
+
+            </div></td>
+            <td><input type="number" min="0" value="${asset.actualQty}" ${!asset.exists ? "disabled" : ""} onchange="setActualQty(${index}, this.value)"></td>
+            <td><select onchange="setCondition(${index}, this.value)">
+              ${["Baik", "Rusak Ringan", "Rusak Berat"].map(value => `<option value="${value}" ${asset.condition === value ? "selected" : ""}>${value}</option>`).join("")}
+            </select></td>
+            <td><textarea rows="2" placeholder="Catatan" onchange="setNote(${index}, this.value)">${asset.note}</textarea></td>
+          </tr>`;
+
+  }).join("")}</tbody></table></div>`;
+
+  updateSummary();
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| ADA / TIDAK ADA
+|--------------------------------------------------------------------------
+*/
+
+function setExists(index, value) {
+
+  const asset =
+    inventoryByRoom[selectedRoomId][index];
+
+  asset.exists = value;
+
+  if (!value) {
+
+    asset.actualQty = 0;
+
+  } else if (asset.actualQty === 0) {
+
+    asset.actualQty =
+      asset.registeredQty > 0
+        ? asset.registeredQty
+        : 1;
+
+  }
+
+  renderAssets();
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| UPDATE JUMLAH
+|--------------------------------------------------------------------------
+*/
+
+function setActualQty(index, value) {
+
+  const asset =
+    inventoryByRoom[selectedRoomId][index];
+
+  let qty = Number(value);
+
+  if (qty < 0 || Number.isNaN(qty)) {
+    qty = 0;
+  }
+
+  asset.actualQty = qty;
+
+  asset.exists = qty > 0;
+
+  renderAssets();
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| UPDATE CATATAN
+|--------------------------------------------------------------------------
+*/
+
+function setNote(index, value) {
+
+  inventoryByRoom[selectedRoomId][index].note =
+    value;
+
+}
+
+function setCondition(index, value) {
+  inventoryByRoom[selectedRoomId][index].condition = value;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SUMMARY
+|--------------------------------------------------------------------------
+*/
+
+function updateSummary() {
+
+  const assets =
+    inventoryByRoom[selectedRoomId] || [];
+
+  const exists =
+    assets.filter(asset => asset.exists).length;
+
+  const missing =
+    assets.filter(asset => !asset.exists).length;
+
+  document.getElementById(
+    "summaryAssets"
+  ).textContent = assets.length;
+
+  document.getElementById(
+    "summaryExists"
+  ).textContent = exists;
+
+  document.getElementById(
+    "summaryMissing"
+  ).textContent = missing;
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SIMPAN
+|--------------------------------------------------------------------------
+*/
+
+async function submitInventory() {
+
+  const teacherName =
+    document.getElementById(
+      "teacherName"
+    ).value.trim();
+
+  if (!teacherName) {
+
+    alert(
+      "Nama guru / petugas belum diisi."
+    );
+
+    return;
+
+  }
+
+  if (!selectedRoomId) {
+
+    alert(
+      "Pilih ruangan terlebih dahulu."
+    );
+
+    return;
+
+  }
+
+  const room =
+    rooms.find(
+      item => item.id === selectedRoomId
+    );
+
+  const assets =
+    inventoryByRoom[selectedRoomId] || [];
+
+  const result = {
+
+    teacher_name: teacherName,
+
+    room_id: room.id,
+
+    room_code: room.code,
+
+    room_name: room.name,
+
+    checked_at:
+      new Date().toISOString(),
+
+    assets: assets.map(asset => ({
+
+      asset_id: asset.id,
+
+      asset_code: asset.code,
+
+      asset_name: asset.name,
+
+      registered_qty:
+        asset.registeredQty,
+
+      actual_qty:
+        asset.actualQty,
+
+      exists:
+        asset.exists,
+
+      difference:
+        asset.actualQty -
+        asset.registeredQty,
+
+      note:
+        asset.note,
+
+      condition:
+        asset.condition
+
+    }))
+
+  };
+
+  console.log("DATA PEMERIKSAAN:");
+  console.log(result);
+
+  if (db) {
+    const { data: inspection, error: inspectionError } = await db
+      .from("inventory_checks")
+      .insert({
+        teacher_name: result.teacher_name,
+        room_id: result.room_id,
+        room_code: result.room_code,
+        room_name: result.room_name,
+        checked_at: result.checked_at
+      })
+      .select("id")
+      .single();
+
+    if (inspectionError) {
+      alert("Gagal menyimpan pemeriksaan ke Supabase.");
+      console.error(inspectionError);
+      return;
+    }
+
+    const rows = result.assets.map(asset => ({
+      inventory_check_id: inspection.id,
+      asset_id: asset.asset_id,
+      asset_code: asset.asset_code,
+      asset_name: asset.asset_name,
+      registered_qty: asset.registered_qty,
+      actual_qty: asset.actual_qty,
+      exists: asset.exists,
+      difference: asset.difference,
+      note: asset.note
+      ,condition: asset.condition
+    }));
+
+    const { error: detailError } = await db
+      .from("inventory_check_items")
+      .insert(rows);
+
+    if (detailError) {
+      alert("Data utama tersimpan, tetapi detail aset gagal disimpan.");
+      console.error(detailError);
+      return;
+    }
+
+    alert("Pemeriksaan berhasil disimpan ke Supabase.");
+    return;
+  }
+
+  alert(
+    "Pemeriksaan berhasil disimpan!\n\n" +
+    "Mode Supabase belum aktif. Isi SUPABASE_URL dan SUPABASE_ANON_KEY."
+  );
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| INIT
+|--------------------------------------------------------------------------
+*/
+
+loadRooms();
+
+  </script>
+
+</body>
+</html>

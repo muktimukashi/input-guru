@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventaris Sekolah</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, Arial, sans-serif;
+    }
+
+    body {
+      background: #f6f7fb;
+      color: #1f2937;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      width: 240px;
+      background: #111827;
+      color: white;
+      padding: 24px 18px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    .brand {
+      margin-bottom: 36px;
+    }
+
+    .brand h2 {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .brand p {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      padding: 12px 14px;
+      border-radius: 10px;
+      color: #cbd5e1;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: #2563eb;
+      color: white;
+    }
+
+    /* CONTENT */
+
+    .main {
+      margin-left: 240px;
+      width: calc(100% - 240px);
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      gap: 20px;
+    }
+
+    .topbar h1 {
+      font-size: 26px;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #2563eb;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* STATS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .stat-card p {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+
+    .stat-card h2 {
+      font-size: 28px;
+    }
+
+    /* PANEL */
+
+    .panel {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .panel-header h3 {
+      font-size: 17px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .input,
+    .select {
+      border: 1px solid #d1d5db;
+      padding: 10px 12px;
+      border-radius: 9px;
+      outline: none;
+      background: white;
+    }
+
+    .input:focus,
+    .select:focus {
+      border-color: #2563eb;
+    }
+
+    /* TABLE */
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th,
+    td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+
+    th {
+      font-size: 12px;
+      color: #64748b;
+      background: #f8fafc;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .badge {
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .badge-done {
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .badge-pending {
+      color: #92400e;
+      background: #fef3c7;
+    }
+
+    .badge-good {
+      color: #166534;
+      background: #dcfce7;
+    }
+
+    .badge-broken {
+      color: #991b1b;
+      background: #fee2e2;
+    }
+
+    .badge-missing {
+      color: #7c2d12;
+      background: #ffedd5;
+    }
+
+    .btn {
+      border: 0;
+      padding: 9px 13px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-light {
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    /* MODAL */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 999;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      width: min(850px, 100%);
+      max-height: 90vh;
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .close-btn {
+      border: 0;
+      background: #f1f5f9;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      font-size: 18px;
+    }
+
+    .room-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      background: #eff6ff;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .asset-form {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .asset-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .asset-row {
+      padding: 14px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      display: grid;
+      grid-template-columns: 2fr 80px 110px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .asset-name {
+      font-weight: 600;
+    }
+
+    .asset-code {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 3px;
+    }
+
+    /* MOBILE */
+
+    .mobile-header {
+      display: none;
+    }
+
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: #eef2f7;
+    }
+
+    .login-box {
+      width: min(100%, 390px);
+      padding: 32px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, .14);
+    }
+
+    .login-mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 18px;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-weight: 800;
+      font-size: 20px;
+    }
+
+    .login-box h1 { margin: 0 0 6px; font-size: 24px; color: #111827; }
+    .login-box p { margin: 0 0 20px; color: #6b7280; }
+    .login-box .field { margin-bottom: 14px; }
+    .login-box label { color: #374151; }
+    .login-box input { padding: 12px 13px; border-radius: 8px; }
+    .login-box input:focus { box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); }
+    .login-box button { width: 100%; }
+    .login-error { min-height: 20px; margin-top: 12px !important; color: #b91c1c !important; font-size: 13px; }
+
+    .logout-button {
+      margin: 20px 24px 0;
+      width: calc(100% - 48px);
+      border: 1px solid #fecaca;
+      background: #fff1f2;
+      color: #be123c;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 16px;
+      }
+
+      .mobile-header {
+        display: block;
+        background: #111827;
+        color: white;
+        padding: 16px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .profile {
+        display: none;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 15px;
+      }
+
+      .stat-card h2 {
+        font-size: 23px;
+      }
+
+      .panel-header {
+        align-items: stretch;
+      }
+
+      .filters {
+        width: 100%;
+      }
+
+      .filters input,
+      .filters select {
+        flex: 1;
+        min-width: 140px;
+      }
+
+      .asset-form {
+        grid-template-columns: 1fr;
+      }
+
+      .asset-row {
+        grid-template-columns: 1fr;
+      }
+
+      .room-info {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <section id="loginScreen" class="login-screen">
+    <form id="loginForm" class="login-box">
+      <div class="login-mark">IS</div>
+      <h1>Login Admin</h1>
+      <p>Masuk untuk mengelola data inventaris.</p>
+      <div class="field">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" type="email" required autocomplete="email" placeholder="admin@sekolah.sch.id">
+      </div>
+      <div class="field">
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" type="password" required autocomplete="current-password" placeholder="Password admin">
+      </div>
+      <button class="primary" type="submit">Masuk</button>
+      <p id="loginError" class="login-error"></p>
+    </form>
+  </section>
+
+  <div class="mobile-header">
+    <strong>Inventaris Sekolah</strong>
+    <a href="index.html" style="float:right;color:white;text-decoration:none;">Form Guru</a>
+  </div>
+
+  <div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+      <div class="brand">
+        <h2>Inventaris Sekolah</h2>
+        <p>Sistem Pendataan Aset</p>
+      </div>
+
+      <nav class="nav">
+        <a href="#" class="nav-item active">Dashboard</a>
+        <a href="#data" class="nav-item">Data Inventaris</a>
+        <a href="index.html" class="nav-item">Form Guru</a>
+      </nav>
+      <button id="logoutButton" class="logout-button" type="button">Logout</button>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+      <div class="topbar">
+
+        <div>
+          <h1>Dashboard Inventaris</h1>
+          <p class="subtitle">
+            Pantau aset dan pengecekan inventaris setiap ruangan.
+          </p>
+        </div>
+
+        <div class="profile">
+          <div>
+            <strong>Administrator</strong>
+            <div class="subtitle">Admin Sekolah</div>
+          </div>
+
+          <div class="avatar">
+            A
+          </div>
+        </div>
+
+      </div>
+
+      <!-- STATISTIK -->
+
+      <section class="stats">
+
+        <div class="stat-card">
+          <p>Total Ruangan</p>
+          <h2 id="totalRooms">100</h2>
+        </div>
+
+        <div class="stat-card">
+          <p>Total Aset</p>
+          <h2 id="totalAssets">427</h2>
+        </div>
+
+        <div class="stat-card">
+          <p>Sudah Dicek</p>
+          <h2 id="checkedRooms">68</h2>
+        </div>
+
+        <div class="stat-card">
+          <p>Belum Dicek</p>
+          <h2 id="uncheckedRooms">32</h2>
+        </div>
+
+      </section>
+
+      <!-- DAFTAR RUANGAN -->
+
+      <section class="panel" id="data">
+
+        <div class="panel-header">
+
+          <div>
+            <h3>Daftar Ruangan</h3>
+            <p class="subtitle">
+              Pilih ruangan untuk melihat inventaris.
+            </p>
+          </div>
+
+          <div class="filters">
+
+            <input
+              type="text"
+              class="input"
+              id="searchInput"
+              placeholder="Cari ruangan..."
+            />
+
+            <select class="select" id="statusFilter">
+              <option value="all">Semua Status</option>
+              <option value="done">Sudah Dicek</option>
+              <option value="pending">Belum Dicek</option>
+            </select>
+
+          </div>
+
+        </div>
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Ruangan</th>
+                <th>Kode</th>
+                <th>Jumlah Aset</th>
+                <th>Status</th>
+                <th>Terakhir Dicek</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+
+            <tbody id="roomTable"></tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- MODAL RUANGAN -->
+
+  <div class="modal-backdrop" id="modalBackdrop">
+
+    <div class="modal">
+
+      <div class="modal-header">
+
+        <div>
+          <h3 id="modalRoomName">Ruangan</h3>
+          <p class="subtitle" id="modalRoomCode"></p>
+        </div>
+
+        <button class="close-btn" onclick="closeModal()">
+          &times;
+        </button>
+
+      </div>
+
+      <div class="modal-body">
+
+        <div class="room-info">
+
+          <div>
+            <strong>Data Inventaris Ruangan</strong>
+            <div class="subtitle">
+              Periksa dan update kondisi aset yang tersedia.
+            </div>
+          </div>
+
+          <button class="btn btn-primary">
+            Tandai Sudah Dicek
+          </button>
+
+        </div>
+
+        <!-- TAMBAH ASET -->
+
+        <div class="asset-form">
+
+          <input
+            class="input"
+            id="assetName"
+            placeholder="Nama barang..."
+          />
+
+          <input
+            class="input"
+            id="assetQty"
+            type="number"
+            min="1"
+            value="1"
+          />
+
+          <select class="select" id="assetCondition">
+            <option value="Baik">Baik</option>
+            <option value="Rusak">Rusak</option>
+            <option value="Hilang">Hilang</option>
+          </select>
+
+          <button
+            class="btn btn-primary"
+            onclick="addAsset()"
+          >
+            Tambah
+          </button>
+
+        </div>
+
+        <!-- LIST ASET -->
+
+        <div id="assetList" class="asset-list"></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+
+    const SUPABASE_URL = "https://txxtadcmtbccawumguho.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_In51sv-SXnnYLInFG7-o1w_t-A0qLFQ";
+    const supabaseReady =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_ANON_KEY.startsWith("ISI_");
+    const db = supabaseReady
+      ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
+
+    async function startAdmin() {
+      if (!db) {
+        document.getElementById("loginError").textContent = "Konfigurasi Supabase belum benar.";
+        return;
+      }
+
+      const { data: { session } } = await db.auth.getSession();
+      if (session) {
+        document.getElementById("loginScreen").style.display = "none";
+        loadRooms();
+      }
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+      const errorText = document.getElementById("loginError");
+      errorText.textContent = "";
+
+      const { error } = await db.auth.signInWithPassword({ email, password });
+      if (error) {
+        errorText.textContent = "Email atau password salah.";
+        console.error(error);
+        return;
+      }
+      document.getElementById("loginScreen").style.display = "none";
+      loadRooms();
+    });
+
+    document.getElementById("logoutButton").addEventListener("click", async () => {
+      await db.auth.signOut();
+      location.reload();
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATA DUMMY RUANGAN
+    |--------------------------------------------------------------------------
+    */
+
+    let rooms = [
+      {
+        id: 1,
+        name: "Ruang Kelas 7A",
+        code: "R-001",
+        assetCount: 6,
+        status: "pending",
+        checkedAt: "-"
+      },
+      {
+        id: 2,
+        name: "Ruang Kelas 7B",
+        code: "R-002",
+        assetCount: 4,
+        status: "pending",
+        checkedAt: "-"
+      },
+      {
+        id: 3,
+        name: "Ruang Kelas 8A",
+        code: "R-003",
+        assetCount: 4,
+        status: "done",
+        checkedAt: "04 Sep 2026"
+      },
+      {
+        id: 4,
+        name: "Laboratorium Komputer",
+        code: "R-004",
+        assetCount: 6,
+        status: "pending",
+        checkedAt: "-"
+      },
+      {
+        id: 5,
+        name: "Laboratorium IPA",
+        code: "R-005",
+        assetCount: 4,
+        status: "done",
+        checkedAt: "04 Sep 2026"
+      },
+      {
+        id: 6,
+        name: "Perpustakaan",
+        code: "R-006",
+        assetCount: 4,
+        status: "pending",
+        checkedAt: "-"
+      },
+      {
+        id: 7,
+        name: "Ruang Guru",
+        code: "R-007",
+        assetCount: 4,
+        status: "pending",
+        checkedAt: "-"
+      },
+      {
+        id: 8,
+        name: "Ruang Kepala Sekolah",
+        code: "R-008",
+        assetCount: 4,
+        status: "done",
+        checkedAt: "04 Sep 2026"
+      },
+      {
+        id: 9,
+        name: "Ruang Tata Usaha",
+        code: "R-009",
+        assetCount: 4,
+        status: "pending",
+        checkedAt: "-"
+      },
+      {
+        id: 10,
+        name: "Ruang Multimedia",
+        code: "R-010",
+        assetCount: 4,
+        status: "pending",
+        checkedAt: "-"
+      }
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATA ASET DUMMY
+    |--------------------------------------------------------------------------
+    */
+
+    let assetsByRoom = {
+      1: [
+        { id: 101, name: "Meja Guru", qty: 1, condition: "Baik" },
+        { id: 102, name: "Kursi Guru", qty: 1, condition: "Baik" },
+        { id: 103, name: "Meja Siswa", qty: 18, condition: "Baik" },
+        { id: 104, name: "Kursi Siswa", qty: 36, condition: "Baik" },
+        { id: 105, name: "Papan Tulis", qty: 1, condition: "Baik" },
+        { id: 106, name: "Proyektor", qty: 1, condition: "Rusak" }
+      ],
+      2: [
+        { id: 201, name: "Meja Guru", qty: 1, condition: "Baik" },
+        { id: 202, name: "Kursi Guru", qty: 1, condition: "Baik" },
+        { id: 203, name: "Meja Siswa", qty: 20, condition: "Baik" },
+        { id: 204, name: "Kursi Siswa", qty: 40, condition: "Baik" }
+      ],
+      3: [
+        { id: 301, name: "Meja Guru", qty: 1, condition: "Baik" },
+        { id: 302, name: "Meja Siswa", qty: 18, condition: "Baik" },
+        { id: 303, name: "Kursi Siswa", qty: 36, condition: "Baik" },
+        { id: 304, name: "Lemari Kelas", qty: 2, condition: "Baik" }
+      ],
+      4: [
+        { id: 401, name: "Komputer Desktop", qty: 30, condition: "Baik" },
+        { id: 402, name: "Monitor", qty: 30, condition: "Baik" },
+        { id: 403, name: "Keyboard", qty: 30, condition: "Baik" },
+        { id: 404, name: "Mouse", qty: 30, condition: "Baik" },
+        { id: 405, name: "Proyektor", qty: 1, condition: "Baik" },
+        { id: 406, name: "AC", qty: 2, condition: "Baik" }
+      ],
+      5: [
+        { id: 501, name: "Meja Praktikum", qty: 8, condition: "Baik" },
+        { id: 502, name: "Kursi Praktikum", qty: 32, condition: "Baik" },
+        { id: 503, name: "Mikroskop", qty: 10, condition: "Baik" },
+        { id: 504, name: "Lemari Alat", qty: 4, condition: "Baik" }
+      ],
+      6: [
+        { id: 601, name: "Rak Buku", qty: 12, condition: "Baik" },
+        { id: 602, name: "Meja Baca", qty: 10, condition: "Baik" },
+        { id: 603, name: "Kursi Baca", qty: 40, condition: "Baik" },
+        { id: 604, name: "Komputer", qty: 4, condition: "Baik" }
+      ],
+      7: [
+        { id: 701, name: "Meja Guru", qty: 20, condition: "Baik" },
+        { id: 702, name: "Kursi Guru", qty: 20, condition: "Baik" },
+        { id: 703, name: "Lemari Arsip", qty: 6, condition: "Baik" },
+        { id: 704, name: "Printer", qty: 2, condition: "Baik" }
+      ],
+      8: [
+        { id: 801, name: "Meja Kerja", qty: 1, condition: "Baik" },
+        { id: 802, name: "Kursi Kerja", qty: 1, condition: "Baik" },
+        { id: 803, name: "Laptop", qty: 1, condition: "Baik" },
+        { id: 804, name: "Printer", qty: 1, condition: "Baik" }
+      ],
+      9: [
+        { id: 901, name: "Meja Kerja", qty: 6, condition: "Baik" },
+        { id: 902, name: "Kursi Kerja", qty: 6, condition: "Baik" },
+        { id: 903, name: "Komputer", qty: 5, condition: "Baik" },
+        { id: 904, name: "Printer", qty: 3, condition: "Baik" }
+      ],
+      10: [
+        { id: 1001, name: "Smart TV", qty: 2, condition: "Baik" },
+        { id: 1002, name: "Proyektor", qty: 1, condition: "Baik" },
+        { id: 1003, name: "Speaker Aktif", qty: 4, condition: "Baik" },
+        { id: 1004, name: "Laptop", qty: 5, condition: "Baik" }
+      ]
+    };
+
+    let selectedRoomId = null;
+
+    /*
+    |--------------------------------------------------------------------------
+    | RENDER RUANGAN
+    |--------------------------------------------------------------------------
+    */
+
+    async function loadRooms() {
+      if (!db) {
+        renderRooms();
+        return;
+      }
+
+      const { data, error } = await db
+        .from("rooms")
+        .select("id, name, code, description, status, checked_at, assets(id)")
+        .order("name");
+
+      if (error) {
+        alert("Gagal mengambil data ruangan dari Supabase.");
+        console.error(error);
+        renderRooms();
+        return;
+      }
+
+      rooms = (data || []).map(room => ({
+        id: room.id,
+        name: room.name,
+        code: room.code,
+        assetCount: room.assets ? room.assets.length : 0,
+        status: room.status || "pending",
+        checkedAt: room.checked_at
+          ? new Date(room.checked_at).toLocaleDateString("id-ID")
+          : "-"
+      }));
+
+      renderRooms();
+    }
+
+    function renderRooms() {
+      updateStats();
+
+      const searchValue =
+        document
+          .getElementById("searchInput")
+          .value
+          .toLowerCase();
+
+      const statusValue =
+        document
+          .getElementById("statusFilter")
+          .value;
+
+      const filteredRooms = rooms.filter(room => {
+
+        const matchesSearch =
+          room.name
+            .toLowerCase()
+            .includes(searchValue) ||
+          room.code
+            .toLowerCase()
+            .includes(searchValue);
+
+        const matchesStatus =
+          statusValue === "all" ||
+          room.status === statusValue;
+
+        return matchesSearch && matchesStatus;
+
+      });
+
+      const table =
+        document.getElementById("roomTable");
+
+      table.innerHTML = "";
+
+      filteredRooms.forEach(room => {
+
+        const badge =
+          room.status === "done"
+            ? `<span class="badge badge-done">
+                Sudah Dicek
+               </span>`
+            : `<span class="badge badge-pending">
+                Belum Dicek
+               </span>`;
+
+        table.innerHTML += `
+          <tr>
+
+            <td>
+              <strong>${room.name}</strong>
+            </td>
+
+            <td>
+              ${room.code}
+            </td>
+
+            <td>
+              ${room.assetCount} aset
+            </td>
+
+            <td>
+              ${badge}
+            </td>
+
+            <td>
+              ${room.checkedAt}
+            </td>
+
+            <td>
+              <button
+                class="btn btn-light"
+                onclick="openRoom(${room.id})"
+              >
+                Lihat Inventaris
+              </button>
+            </td>
+
+          </tr>
+        `;
+
+      });
+
+    }
+
+    function updateStats() {
+      const totalRooms = rooms.length;
+      const totalAssets = rooms.reduce(
+        (sum, room) => sum + Number(room.assetCount || 0),
+        0
+      );
+      const checkedRooms = rooms.filter(
+        room => room.status === "done"
+      ).length;
+
+      document.getElementById("totalRooms").textContent = totalRooms;
+      document.getElementById("totalAssets").textContent = totalAssets;
+      document.getElementById("checkedRooms").textContent = checkedRooms;
+      document.getElementById("uncheckedRooms").textContent =
+        totalRooms - checkedRooms;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | MODAL RUANGAN
+    |--------------------------------------------------------------------------
+    */
+
+    async function openRoom(roomId) {
+
+      selectedRoomId = roomId;
+
+      const room =
+        rooms.find(item => item.id === roomId);
+
+      document.getElementById(
+        "modalRoomName"
+      ).textContent = room.name;
+
+      document.getElementById(
+        "modalRoomCode"
+      ).textContent = room.code;
+
+      document
+        .getElementById("modalBackdrop")
+        .classList
+        .add("show");
+
+      await loadAssets(roomId);
+
+    }
+
+    async function loadAssets(roomId) {
+      if (!db) {
+        renderAssets();
+        return;
+      }
+
+      const { data, error } = await db
+        .from("assets")
+        .select("id, name, code, qty, condition")
+        .eq("room_id", roomId)
+        .order("name");
+
+      if (error) {
+        alert("Gagal mengambil data aset dari Supabase.");
+        console.error(error);
+        assetsByRoom[roomId] = [];
+      } else {
+        assetsByRoom[roomId] = (data || []).map(asset => ({
+          id: asset.id,
+          name: asset.name,
+          code: asset.code,
+          qty: Number(asset.qty || 0),
+          condition: asset.condition || "Baik"
+        }));
+      }
+
+      renderAssets();
+    }
+
+    function closeModal() {
+
+      document
+        .getElementById("modalBackdrop")
+        .classList
+        .remove("show");
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | RENDER ASET
+    |--------------------------------------------------------------------------
+    */
+
+    function renderAssets() {
+
+      const list =
+        document.getElementById("assetList");
+
+      const assets =
+        assetsByRoom[selectedRoomId] || [];
+
+      list.innerHTML = "";
+
+      if (assets.length === 0) {
+
+        list.innerHTML = `
+          <div
+            style="
+              text-align:center;
+              padding:30px;
+              color:#94a3b8;
+            "
+          >
+            Belum ada aset di ruangan ini.
+          </div>
+        `;
+
+        return;
+
+      }
+
+      assets.forEach(asset => {
+
+        let badgeClass = "badge-good";
+
+        if (asset.condition === "Rusak") {
+          badgeClass = "badge-broken";
+        }
+
+        if (asset.condition === "Hilang") {
+          badgeClass = "badge-missing";
+        }
+
+        list.innerHTML += `
+          <div class="asset-row">
+
+            <div>
+              <div class="asset-name">
+                ${asset.name}
+              </div>
+
+              <div class="asset-code">
+                ID Aset #${asset.id}
+              </div>
+            </div>
+
+            <div>
+              ${asset.qty} unit
+            </div>
+
+            <div>
+              <span
+                class="badge ${badgeClass}"
+              >
+                ${asset.condition}
+              </span>
+            </div>
+
+          </div>
+        `;
+
+      });
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | TAMBAH ASET
+    |--------------------------------------------------------------------------
+    */
+
+    async function addAsset() {
+
+      const name =
+        document
+          .getElementById("assetName")
+          .value
+          .trim();
+
+      const qty =
+        Number(
+          document
+            .getElementById("assetQty")
+            .value
+        );
+
+      const condition =
+        document
+          .getElementById("assetCondition")
+          .value;
+
+      if (!name) {
+
+        alert("Nama barang belum diisi.");
+
+        return;
+
+      }
+
+      if (db) {
+        const { error } = await db
+          .from("assets")
+          .insert({
+            room_id: selectedRoomId,
+            code: `AST-${Date.now()}`,
+            name,
+            qty,
+            registered_qty: qty,
+            condition
+          });
+
+        if (error) {
+          alert("Gagal menyimpan aset ke Supabase.");
+          console.error(error);
+          return;
+        }
+
+        await loadAssets(selectedRoomId);
+        await loadRooms();
+      } else {
+        if (!assetsByRoom[selectedRoomId]) {
+          assetsByRoom[selectedRoomId] = [];
+        }
+
+        assetsByRoom[selectedRoomId].push({
+
+          id: Date.now(),
+
+          name,
+
+          qty,
+
+          condition
+
+        });
+
+        const room = rooms.find(item => item.id === selectedRoomId);
+        if (room) {
+          room.assetCount = assetsByRoom[selectedRoomId].length;
+        }
+
+        renderAssets();
+        renderRooms();
+      }
+
+      document.getElementById(
+        "assetName"
+      ).value = "";
+
+      document.getElementById(
+        "assetQty"
+      ).value = 1;
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | SEARCH + FILTER
+    |--------------------------------------------------------------------------
+    */
+
+    document
+      .getElementById("searchInput")
+      .addEventListener(
+        "input",
+        renderRooms
+      );
+
+    document
+      .getElementById("statusFilter")
+      .addEventListener(
+        "change",
+        renderRooms
+      );
+
+    /*
+    |--------------------------------------------------------------------------
+    | CLOSE MODAL KLIK BACKDROP
+    |--------------------------------------------------------------------------
+    */
+
+    document
+      .getElementById("modalBackdrop")
+      .addEventListener("click", event => {
+
+        if (
+          event.target.id ===
+          "modalBackdrop"
+        ) {
+          closeModal();
+        }
+
+      });
+
+    /*
+    |--------------------------------------------------------------------------
+    | INIT
+    |--------------------------------------------------------------------------
+    */
+
+    startAdmin();
+
+  </script>
+
+</body>
+</html>
