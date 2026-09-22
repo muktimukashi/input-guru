@@ -27,7 +27,7 @@
     }
 
     .header {
-      background: #2563eb;
+      background: #49945f;
       color: white;
       padding: 22px;
       border-radius: 18px;
@@ -121,6 +121,42 @@
       margin-bottom: 4px;
     }
 
+    .help-text { color: #64748b; font-size: 12px; margin-top: 6px; line-height: 1.45; }
+    .room-recommendations { margin-top: 9px; }
+    .room-recommendations[hidden] { display: none; }
+    .recommendation-label { color: #64748b; font-size: 12px; margin-bottom: 7px; }
+    .recommendation-options { display: flex; flex-wrap: wrap; gap: 7px; }
+    .recommendation-chip {
+      border: 1px solid #bbd8c4;
+      background: #f0f8f2;
+      color: #27643a;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .recommendation-chip:hover,
+    .recommendation-chip:focus-visible {
+      border-color: #49945f;
+      background: #e1f1e6;
+      outline: none;
+    }
+    .recommendation-empty { color: #94a3b8; font-size: 12px; }
+    .add-asset { margin-top: 14px; padding: 14px; background: #f8fafc; border: 1px dashed #94a3b8; border-radius: 12px; }
+    .add-asset h3 { font-size: 15px; margin-bottom: 12px; }
+    .add-asset-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
+    .add-asset-grid .field { margin: 0; }
+    .add-asset-grid .full-width { grid-column: 1 / -1; }
+    .add-asset-grid label span { color: #dc2626; }
+    .secondary-btn { border: 0; background: #0f766e; color: #fff; padding: 10px 12px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+    .remove-asset-btn { border: 1px solid #fecaca; background: #fff1f2; color: #be123c; padding: 9px 11px; border-radius: 9px; font-weight: 700; cursor: pointer; }
+    .remove-asset-btn:hover { background: #ffe4e6; }
+    @media (max-width: 560px) {
+      .add-asset-grid { grid-template-columns: 1fr; }
+      .add-asset-grid .full-width { grid-column: auto; }
+    }
+
     .section-header {
       display: flex;
       align-items: center;
@@ -145,14 +181,6 @@
       text-align: center;
       padding: 36px 16px;
       border-radius: 14px;
-    }
-
-    .asset-card {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 12px;
     }
 
     .asset-table-wrap {
@@ -185,105 +213,12 @@
 
     .asset-table tr:last-child td { border-bottom: 0; }
     .asset-table .number { width: 48px; text-align: center; color: #64748b; }
-    .asset-table .asset-name { font-size: 14px; }
-    .asset-table .asset-meta { margin-top: 3px; }
     .asset-table input,
     .asset-table select,
     .asset-table textarea { padding: 9px; font-size: 14px; }
     .asset-table textarea { min-width: 190px; resize: vertical; }
-    .asset-table .exist-buttons { display: flex; margin: 0; min-width: 150px; }
-    .asset-table .exist-btn { padding: 8px 10px; font-size: 12px; }
-
     @media (max-width: 640px) {
       .asset-table-wrap { margin: 0 -2px; }
-    }
-
-    .asset-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .asset-name {
-      font-size: 17px;
-      font-weight: 700;
-    }
-
-    .asset-meta {
-      font-size: 12px;
-      color: #9ca3af;
-      margin-top: 4px;
-    }
-
-    .registered-badge {
-      background: #f3f4f6;
-      color: #4b5563;
-      padding: 6px 9px;
-      border-radius: 20px;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-
-    .exist-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .exist-btn {
-      border: 1px solid #d1d5db;
-      background: white;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .exist-btn.ada.active {
-      background: #dcfce7;
-      color: #166534;
-      border-color: #86efac;
-    }
-
-    .exist-btn.tidak.active {
-      background: #fee2e2;
-      color: #991b1b;
-      border-color: #fca5a5;
-    }
-
-    .qty-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .difference {
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-    }
-
-    .difference.same {
-      background: #f0fdf4;
-      color: #166534;
-    }
-
-    .difference.less {
-      background: #fff7ed;
-      color: #9a3412;
-    }
-
-    .difference.more {
-      background: #eff6ff;
-      color: #1d4ed8;
     }
 
     .summary {
@@ -341,16 +276,8 @@
     }
 
     @media (max-width: 560px) {
-      .qty-row {
-        grid-template-columns: 1fr;
-      }
-
       .summary {
         grid-template-columns: 1fr;
-      }
-
-      .asset-top {
-        flex-direction: column;
       }
     }
   </style>
@@ -364,32 +291,45 @@
 <div class="header">
   <h1>Pengecekan Inventaris</h1>
   <p>
-    Pilih ruangan, lalu periksa apakah aset tersedia dan isi jumlah aktual.
+    Pilih atau tulis ruangan, lalu masukkan inventaris yang digunakan jangka panjang.
   </p>
-  <div class="top-links">
+  <!-- <div class="top-links">
     <a href="admin.html">Admin</a>
     <a href="index.html">Form Guru</a>
-  </div>
+  </div> -->
 </div>
 
 <div class="card">
 
   <div class="field">
-    <label>Nama Guru / Petugas</label>
+    <label>PIC / Guru Penanggung Jawab</label>
 
     <input
       type="text"
       id="teacherName"
       placeholder="Contoh: Budi Santoso"
+      list="picSuggestions"
     />
+    <datalist id="picSuggestions"></datalist>
   </div>
 
   <div class="field">
-    <label>Pilih Ruangan</label>
-
-    <select id="roomSelect" onchange="changeRoom()">
-      <option value="">-- Pilih ruangan --</option>
+    <label>Unit</label>
+    <select id="unitSelect" onchange="handleUnitChange()">
+      <option value="">-- Pilih unit --</option>
+      <option>KBTK</option><option>SD</option><option>SMP</option><option>Manajemen</option><option>Lainnya</option>
     </select>
+  </div>
+
+  <div class="field">
+    <label>Nama Ruangan / Kelas</label>
+
+    <input id="roomSelect" type="text" placeholder="Ketik nama ruangan atau pilih rekomendasi" autocomplete="off" oninput="updateRoomRecommendations()" onchange="changeRoom()" />
+    <div class="room-recommendations" id="roomRecommendations" hidden>
+      <p class="recommendation-label" id="recommendationLabel"></p>
+      <div class="recommendation-options" id="recommendationOptions"></div>
+    </div>
+    <p class="help-text">Ruangan yang belum ada boleh ditulis manual dan akan ditandai untuk verifikasi admin.</p>
   </div>
 
   <div class="room-info" id="roomInfo">
@@ -402,24 +342,24 @@
 <div class="summary" id="summary">
 
   <div class="summary-card">
-    <small>Total Jenis Aset</small>
+    <small>Jenis Inventaris</small>
     <strong id="summaryAssets">0</strong>
   </div>
 
   <div class="summary-card">
-    <small>Aset Ada</small>
+    <small>Total Barang</small>
     <strong id="summaryExists">0</strong>
   </div>
 
   <div class="summary-card">
-    <small>Tidak Ada</small>
+    <small>Perlu Perbaikan</small>
     <strong id="summaryMissing">0</strong>
   </div>
 
 </div>
 
 <div class="section-header">
-  <h2>Daftar Aset</h2>
+  <h2>Daftar Inventaris</h2>
   <span class="asset-count" id="assetCount"></span>
 </div>
 
@@ -451,522 +391,106 @@
     const supabaseReady =
       SUPABASE_URL.startsWith("https://") &&
       !SUPABASE_ANON_KEY.startsWith("ISI_");
-    const db = supabaseReady
+    const db = supabaseReady && window.supabase
       ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
       : null;
 
-    /*
-    |--------------------------------------------------------------------------
-    | DATA RUANGAN DUMMY
-    |--------------------------------------------------------------------------
-    */
-
-    let rooms = [
-      {
-        id: 1,
-        code: "R-001",
-        name: "Ruang Kelas 7A",
-        description: "Gedung A - Lantai 1"
-      },
-      {
-        id: 2,
-        code: "R-002",
-        name: "Ruang Kelas 7B",
-        description: "Gedung A - Lantai 1"
-      },
-      {
-        id: 3,
-        code: "R-003",
-        name: "Ruang Kelas 8A",
-        description: "Gedung A - Lantai 2"
-      },
-      {
-        id: 4,
-        code: "R-004",
-        name: "Laboratorium Komputer",
-        description: "Gedung B - Lantai 1"
-      },
-      {
-        id: 5,
-        code: "R-005",
-        name: "Laboratorium IPA",
-        description: "Gedung B - Lantai 2"
-      },
-      {
-        id: 6,
-        code: "R-006",
-        name: "Perpustakaan",
-        description: "Gedung C - Lantai 1"
-      },
-      {
-        id: 7,
-        code: "R-007",
-        name: "Ruang Guru",
-        description: "Gedung Utama"
-      },
-      {
-        id: 8,
-        code: "R-008",
-        name: "Ruang Kepala Sekolah",
-        description: "Gedung Utama"
-      },
-      {
-        id: 9,
-        code: "R-009",
-        name: "Ruang Tata Usaha",
-        description: "Gedung Utama"
-      },
-      {
-        id: 10,
-        code: "R-010",
-        name: "Ruang Multimedia",
-        description: "Gedung B - Lantai 2"
-      }
-    ];
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | DATA INVENTARIS DUMMY PER RUANGAN
-    |--------------------------------------------------------------------------
-    |
-    | registeredQty = jumlah yang tercatat di database/admin.
-    | actualQty     = jumlah yang ditemukan guru.
-    |
-    */
-
-    let inventoryByRoom = {
-
-      1: [
-        {
-          id: 101,
-          code: "AST-0001",
-          name: "Meja Guru",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 102,
-          code: "AST-0002",
-          name: "Kursi Guru",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 103,
-          code: "AST-0003",
-          name: "Meja Siswa",
-          registeredQty: 18,
-          actualQty: 18,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 104,
-          code: "AST-0004",
-          name: "Kursi Siswa",
-          registeredQty: 36,
-          actualQty: 36,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 105,
-          code: "AST-0005",
-          name: "Papan Tulis",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 106,
-          code: "AST-0006",
-          name: "Proyektor",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        }
-      ],
-
-      2: [
-        {
-          id: 201,
-          code: "AST-0010",
-          name: "Meja Guru",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 202,
-          code: "AST-0011",
-          name: "Kursi Guru",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 203,
-          code: "AST-0012",
-          name: "Meja Siswa",
-          registeredQty: 20,
-          actualQty: 20,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 204,
-          code: "AST-0013",
-          name: "Kursi Siswa",
-          registeredQty: 40,
-          actualQty: 40,
-          exists: true,
-          note: ""
-        }
-      ],
-
-      3: [
-        {
-          id: 301,
-          code: "AST-0020",
-          name: "Meja Guru",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 302,
-          code: "AST-0021",
-          name: "Meja Siswa",
-          registeredQty: 18,
-          actualQty: 18,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 303,
-          code: "AST-0022",
-          name: "Kursi Siswa",
-          registeredQty: 36,
-          actualQty: 36,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 304,
-          code: "AST-0023",
-          name: "Lemari Kelas",
-          registeredQty: 2,
-          actualQty: 2,
-          exists: true,
-          note: ""
-        }
-      ],
-
-      4: [
-        {
-          id: 401,
-          code: "AST-0030",
-          name: "Komputer Desktop",
-          registeredQty: 30,
-          actualQty: 30,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 402,
-          code: "AST-0031",
-          name: "Monitor",
-          registeredQty: 30,
-          actualQty: 30,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 403,
-          code: "AST-0032",
-          name: "Keyboard",
-          registeredQty: 30,
-          actualQty: 30,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 404,
-          code: "AST-0033",
-          name: "Mouse",
-          registeredQty: 30,
-          actualQty: 30,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 405,
-          code: "AST-0034",
-          name: "Proyektor",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 406,
-          code: "AST-0035",
-          name: "AC",
-          registeredQty: 2,
-          actualQty: 2,
-          exists: true,
-          note: ""
-        }
-      ],
-
-      5: [
-        {
-          id: 501,
-          code: "AST-0040",
-          name: "Meja Praktikum",
-          registeredQty: 8,
-          actualQty: 8,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 502,
-          code: "AST-0041",
-          name: "Kursi Praktikum",
-          registeredQty: 32,
-          actualQty: 32,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 503,
-          code: "AST-0042",
-          name: "Mikroskop",
-          registeredQty: 10,
-          actualQty: 10,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 504,
-          code: "AST-0043",
-          name: "Lemari Alat",
-          registeredQty: 4,
-          actualQty: 4,
-          exists: true,
-          note: ""
-        }
-      ],
-
-      6: [
-        {
-          id: 601,
-          code: "AST-0050",
-          name: "Rak Buku",
-          registeredQty: 12,
-          actualQty: 12,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 602,
-          code: "AST-0051",
-          name: "Meja Baca",
-          registeredQty: 10,
-          actualQty: 10,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 603,
-          code: "AST-0052",
-          name: "Kursi Baca",
-          registeredQty: 40,
-          actualQty: 40,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 604,
-          code: "AST-0053",
-          name: "Komputer",
-          registeredQty: 4,
-          actualQty: 4,
-          exists: true,
-          note: ""
-        }
-      ],
-
-      7: [
-        {
-          id: 701,
-          code: "AST-0060",
-          name: "Meja Guru",
-          registeredQty: 20,
-          actualQty: 20,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 702,
-          code: "AST-0061",
-          name: "Kursi Guru",
-          registeredQty: 20,
-          actualQty: 20,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 703,
-          code: "AST-0062",
-          name: "Lemari Arsip",
-          registeredQty: 6,
-          actualQty: 6,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 704,
-          code: "AST-0063",
-          name: "Printer",
-          registeredQty: 2,
-          actualQty: 2,
-          exists: true,
-          note: ""
-        }
-      ],
-
-      8: [
-        {
-          id: 801,
-          code: "AST-0070",
-          name: "Meja Kerja",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 802,
-          code: "AST-0071",
-          name: "Kursi Kerja",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 803,
-          code: "AST-0072",
-          name: "Laptop",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 804,
-          code: "AST-0073",
-          name: "Printer",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        }
-      ],
-
-      9: [
-        {
-          id: 901,
-          code: "AST-0080",
-          name: "Meja Kerja",
-          registeredQty: 6,
-          actualQty: 6,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 902,
-          code: "AST-0081",
-          name: "Kursi Kerja",
-          registeredQty: 6,
-          actualQty: 6,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 903,
-          code: "AST-0082",
-          name: "Komputer",
-          registeredQty: 5,
-          actualQty: 5,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 904,
-          code: "AST-0083",
-          name: "Printer",
-          registeredQty: 3,
-          actualQty: 3,
-          exists: true,
-          note: ""
-        }
-      ],
-
-      10: [
-        {
-          id: 1001,
-          code: "AST-0090",
-          name: "Smart TV",
-          registeredQty: 2,
-          actualQty: 2,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 1002,
-          code: "AST-0091",
-          name: "Proyektor",
-          registeredQty: 1,
-          actualQty: 1,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 1003,
-          code: "AST-0092",
-          name: "Speaker Aktif",
-          registeredQty: 4,
-          actualQty: 4,
-          exists: true,
-          note: ""
-        },
-        {
-          id: 1004,
-          code: "AST-0093",
-          name: "Laptop",
-          registeredQty: 5,
-          actualQty: 5,
-          exists: true,
-          note: ""
-        }
-      ]
-
-    };
-
+    let rooms = [];
+    let inventoryByRoom = {};
 
     let selectedRoomId = null;
+    const manuallyEnteredRooms = new Set();
+    const roomRecommendations = {
+      KBTK: ["KBTK — Kelas A1", "KBTK — Kelas A2", "KBTK — Kelas A3", "KBTK — Kelas B1", "KBTK — Kelas B2", "KBTK — Kelas B3", "KBTK — Kelas B4", "KBTK — Ruang Sentra Pura-Pura", "KBTK — Ruang Kepala Sekolah"],
+      SD: ["Kelas 1A", "Kelas 1B", "Kelas 2A", "Kelas 2B", "Kelas 3A", "Kelas 3B", "Kelas 4A", "Kelas 4B", "Kelas 5A", "Kelas 5B", "Kelas 6A", "Kelas 6B", "Ruang Guru SD"],
+      SMP: ["SMP — Kantin / Ruang Makan", "SMP — Kelas 7A / Ruang PAI", "SMP — Kelas 7B", "SMP — Kelas 7C / Ruang Digital Art", "SMP — Kelas 8A", "SMP — Kelas 8B / Ruang Matematika", "SMP — Kelas 8C", "SMP — Ruang Inklusi", "SMP — Kelas 9A / Ruang IPS", "SMP — Kelas 9B", "SMP — Kelas 9C / Ruang Bahasa", "SMP — Ruang Musik", "SMP — Laboratorium IPA", "SMP — Laboratorium Komputer", "SMP — Ruang Programming", "SMP — UKS", "SMP — Ruang Kepala Sekolah", "SMP — Ruang Guru", "SMP — Ruang OSIS", "SMP — Perpustakaan", "SMP — Ruang Konsultasi Psikologi"],
+      Manajemen: ["Ruang Kepala Sekolah", "Ruang Tata Usaha", "Ruang Kurikulum", "Ruang BK", "Aula", "UKS", "Gudang"]
+    };
+    const assetRecommendationsByRoom = {
+      "Ruang Kelas": [
+        "Meja dan kursi siswa", "Meja dan kursi guru", "Lemari atau rak", "Papan tulis",
+        "Papan pengumuman", "Proyektor dan layar", "TV atau smart display",
+        "Kipas angin atau AC", "Speaker", "Jam dinding", "Gorden", "Tempat sampah"
+      ],
+      "Kantor/Tata Usaha": [
+        "Meja dan kursi kerja", "Kursi tamu", "Lemari arsip", "Rak dokumen",
+        "Komputer atau laptop", "Monitor", "Printer dan scanner", "Mesin fotokopi",
+        "Telepon", "Proyektor", "TV", "AC atau kipas angin", "Brankas",
+        "Mesin penghancur kertas", "CCTV dan perangkat perekam"
+      ],
+      "Ruang Kepala Sekolah": [
+        "Meja dan kursi kepala sekolah", "Kursi tamu atau sofa", "Lemari dokumen",
+        "Komputer atau laptop", "Printer", "TV", "AC atau kipas angin",
+        "Rak atau meja pajangan"
+      ],
+      "Ruang Guru": [
+        "Meja dan kursi guru", "Lemari atau loker guru", "Rak dokumen", "Komputer",
+        "Printer", "Proyektor atau TV", "Dispenser", "Kulkas", "AC atau kipas angin",
+        "Sofa atau kursi tamu"
+      ],
+      "Ruang HRD/Kepegawaian": [
+        "Meja dan kursi kerja", "Kursi tamu", "Lemari arsip", "Filing cabinet",
+        "Komputer atau laptop", "Printer dan scanner", "Mesin absensi", "Brankas",
+        "Telepon", "AC atau kipas angin"
+      ],
+      "Laboratorium Komputer": [
+        "Komputer siswa", "Komputer server", "Laptop", "Monitor", "Meja dan kursi komputer",
+        "Proyektor dan layar", "Printer", "Scanner", "UPS", "Stabilizer", "Switch jaringan",
+        "Router atau access point", "Server rack", "Speaker atau headset", "AC", "CCTV"
+      ],
+      "Laboratorium IPA": [
+        "Meja praktikum", "Kursi atau bangku praktikum", "Lemari alat", "Lemari bahan",
+        "Mikroskop", "Timbangan", "Model anatomi", "Peralatan eksperimen tahan lama",
+        "Wastafel", "Alat pemadam api", "Kotak P3K", "Kulkas laboratorium", "Proyektor"
+      ],
+      "Perpustakaan": [
+        "Rak buku", "Meja dan kursi baca", "Meja petugas", "Lemari", "Komputer petugas",
+        "Komputer pengunjung", "Printer dan scanner", "Barcode scanner", "Troli buku",
+        "Sofa atau karpet baca", "AC atau kipas angin", "CCTV"
+      ],
+      "Ruang Olahraga": [
+        "Lemari atau rak peralatan", "Matras", "Meja tenis meja", "Net dan tiang",
+        "Ring basket", "Gawang", "Papan skor", "Stopwatch", "Pompa bola",
+        "Timbangan badan", "Peralatan kebugaran", "Bangku pemain"
+      ],
+      "Ruang Musik": [
+        "Piano atau keyboard", "Gitar", "Bass", "Drum", "Angklung", "Gamelan", "Perkusi",
+        "Mikrofon", "Stand mikrofon", "Amplifier", "Mixer audio", "Speaker", "Headphone",
+        "Stand partitur", "Lemari atau rak alat musik", "Komputer rekaman",
+        "Audio interface", "AC"
+      ],
+      "Aula/Ruang Pertemuan": [
+        "Kursi", "Meja", "Podium", "Panggung", "Proyektor dan layar", "TV atau videotron",
+        "Speaker", "Mixer audio", "Mikrofon", "Amplifier", "AC atau kipas angin",
+        "Kamera", "Lampu panggung"
+      ],
+      "UKS": [
+        "Tempat tidur pasien", "Kasur dan bantal", "Lemari obat", "Meja dan kursi petugas",
+        "Tandu", "Kursi roda", "Timbangan badan", "Alat ukur tinggi badan", "Tensimeter",
+        "Termometer", "Tabung oksigen", "Sekat ruangan"
+      ],
+      "Kantin/Dapur": [
+        "Meja dan kursi makan", "Meja penyajian", "Lemari makanan", "Rak", "Kompor",
+        "Kulkas atau freezer", "Dispenser", "Wastafel", "Exhaust fan", "Etalase makanan",
+        "Alat pemadam api"
+      ],
+      "Ruang Ibadah": [
+        "Lemari atau rak", "Karpet", "Mimbar", "Rak kitab atau buku", "Speaker", "Mikrofon",
+        "Amplifier", "Jam digital", "Kipas angin atau AC",
+        "Tempat penyimpanan perlengkapan ibadah"
+      ],
+      "Pos Keamanan/Area Umum": [
+        "Meja dan kursi petugas", "Lemari", "Komputer atau monitor CCTV",
+        "Perangkat perekam CCTV", "Radio komunikasi", "Metal detector", "Gerbang atau portal",
+        "APAR", "Bangku tunggu", "Papan informasi", "Tiang bendera", "Pompa air", "Genset"
+      ]
+    };
+    const generalAssetRecommendations = [
+      "Meja", "Kursi", "Lemari", "Rak", "Komputer atau laptop", "Printer",
+      "Proyektor", "TV", "Speaker", "AC atau kipas angin", "CCTV", "Tempat sampah"
+    ];
+    const itemUnitRecommendations = ["Unit", "Buah", "Set", "Pasang", "Paket", "Lembar", "Batang", "Kotak"];
+    const conditionRecommendations = ["Baik", "Rusak Ringan", "Rusak Berat", "Tidak Berfungsi"];
 
 
     /*
@@ -976,14 +500,10 @@
     */
 
     async function loadRooms() {
-
-      const select = document.getElementById("roomSelect");
-      select.innerHTML = `<option value="">-- Pilih ruangan --</option>`;
-
       if (db) {
         const { data, error } = await db
           .from("rooms")
-          .select("id, code, name, description")
+          .select("id, code, name, description, unit, pic_name")
           .order("name");
 
         if (error) {
@@ -994,19 +514,77 @@
         }
       }
 
-      rooms.forEach(room => {
+      updateSuggestions();
 
-        const option = document.createElement("option");
+    }
 
-        option.value = room.id;
+    function updateSuggestions() {
+      const pics = new Set(rooms.map(room => room.pic_name).filter(Boolean));
+      document.getElementById("picSuggestions").innerHTML = [...pics].sort().map(name => `<option value="${name}"></option>`).join("");
+      updateRoomRecommendations();
+    }
 
-        option.textContent =
-          `${room.name} - ${room.code}`;
+    function getRoomRecommendations(unit, query = "") {
+      const names = new Set([
+        ...(roomRecommendations[unit] || []),
+        ...rooms
+          .filter(room => room.unit === unit)
+          .map(room => room.name)
+      ]);
+      const normalizedQuery = query.trim().toLowerCase();
 
-        select.appendChild(option);
+      return [...names]
+        .filter(name => !normalizedQuery || name.toLowerCase().includes(normalizedQuery))
+        .sort((first, second) => first.localeCompare(second, "id"));
+    }
 
+    function updateRoomRecommendations() {
+      const unit = document.getElementById("unitSelect").value;
+      const roomInput = document.getElementById("roomSelect");
+      const container = document.getElementById("roomRecommendations");
+      const label = document.getElementById("recommendationLabel");
+      const options = document.getElementById("recommendationOptions");
+
+      if (!unit) {
+        container.hidden = true;
+        options.innerHTML = "";
+        return;
+      }
+
+      const allMatches = getRoomRecommendations(unit, roomInput.value);
+      const visibleMatches = allMatches.slice(0, 6);
+      container.hidden = false;
+      label.textContent = roomInput.value.trim()
+        ? `Rekomendasi ${unit} sesuai ketikan:`
+        : `Rekomendasi untuk ${unit} (ketik untuk mencari lainnya):`;
+      options.innerHTML = "";
+
+      if (visibleMatches.length === 0) {
+        const emptyText = document.createElement("span");
+        emptyText.className = "recommendation-empty";
+        emptyText.textContent = "Tidak ada rekomendasi yang cocok. Nama ini tetap dapat digunakan sebagai input manual.";
+        options.appendChild(emptyText);
+        return;
+      }
+
+      visibleMatches.forEach(name => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "recommendation-chip";
+        button.textContent = name;
+        button.addEventListener("click", () => {
+          roomInput.value = name;
+          updateRoomRecommendations();
+          changeRoom();
+        });
+        options.appendChild(button);
       });
+    }
 
+    function handleUnitChange() {
+      document.getElementById("roomSelect").value = "";
+      updateRoomRecommendations();
+      changeRoom();
     }
 
 
@@ -1017,11 +595,11 @@
     */
 
     function changeRoom() {
+      updateSuggestions();
+      const name = document.getElementById("roomSelect").value.trim();
+      const unit = document.getElementById("unitSelect").value;
 
-      const value =
-        document.getElementById("roomSelect").value;
-
-      if (!value) {
+      if (!name || !unit) {
 
         selectedRoomId = null;
 
@@ -1033,7 +611,7 @@
 
         document.getElementById("assetList").innerHTML = `
           <div class="empty">
-            Pilih ruangan terlebih dahulu.
+            Pilih unit dan isi nama ruangan terlebih dahulu.
           </div>
         `;
 
@@ -1046,17 +624,14 @@
 
       }
 
-      selectedRoomId = Number(value);
-
-      const room = rooms.find(
-        item => item.id === selectedRoomId
-      );
+      const room = rooms.find(item => item.name.toLowerCase() === name.toLowerCase() && (!item.unit || item.unit === unit));
+      selectedRoomId = room ? room.id : `manual:${unit}:${name}`;
 
       document.getElementById("roomName").textContent =
-        `${room.name} (${room.code})`;
+        room ? `${room.name} (${room.code})` : `${name} (ruangan baru)`;
 
       document.getElementById("roomDescription").textContent =
-        room.description;
+        room ? (room.description || "") : "Input manual — akan diverifikasi admin.";
 
       document.getElementById("roomInfo").style.display =
         "block";
@@ -1066,44 +641,21 @@
 
       document.getElementById("submitButton").disabled =
         false;
+      document.getElementById("submitButton").textContent =
+        "Simpan Pemeriksaan";
 
-      loadAssets(selectedRoomId);
-
-    }
-
-    async function loadAssets(roomId) {
-      if (db) {
-        const { data, error } = await db
-          .from("assets")
-          .select("id, code, name, registered_qty, condition")
-          .eq("room_id", roomId)
-          .order("name");
-
-        if (error) {
-          alert("Gagal mengambil data aset dari Supabase.");
-          console.error(error);
-          inventoryByRoom[roomId] = [];
-        } else {
-          inventoryByRoom[roomId] = (data || []).map(asset => ({
-            id: asset.id,
-            code: asset.code,
-            name: asset.name,
-            registeredQty: Number(asset.registered_qty || 0),
-            actualQty: Number(asset.registered_qty || 0),
-            exists: Number(asset.registered_qty || 0) > 0,
-            condition: asset.condition || "Baik",
-            note: ""
-          }));
-        }
+      const roomKey = String(selectedRoomId);
+      if (!manuallyEnteredRooms.has(roomKey)) {
+        inventoryByRoom[selectedRoomId] = [];
+        manuallyEnteredRooms.add(roomKey);
       }
-
       renderAssets();
-    }
 
+    }
 
     /*
     |--------------------------------------------------------------------------
-    | RENDER ASET
+    | RENDER INVENTARIS
     |--------------------------------------------------------------------------
     */
 
@@ -1116,120 +668,156 @@
 
       document.getElementById(
         "assetCount"
-      ).textContent = `${assets.length} jenis aset`;
+      ).textContent = `${assets.length} jenis inventaris`;
 
       if (assets.length === 0) {
 
-        list.innerHTML = `
+        list.innerHTML = manualAssetForm() + `
           <div class="empty">
-            Belum ada data aset untuk ruangan ini.
+            Belum ada inventaris. Tambahkan barang melalui kolom di atas.
           </div>
         `;
 
         updateSummary();
+        document.getElementById("submitButton").disabled = true;
 
         return;
 
       }
 
-      list.innerHTML = `<div class="asset-table-wrap"><table class="asset-table">
-        <thead><tr><th class="number">No</th><th>Nama Barang</th><th>Ada / Tidak</th><th>Jumlah</th><th>Kondisi</th><th>Catatan</th></tr></thead>
+      list.innerHTML = manualAssetForm() + `<div class="asset-table-wrap"><table class="asset-table">
+        <thead><tr><th class="number">No</th><th>Nama Barang</th><th>Jumlah</th><th>Satuan/Unit</th><th>Kondisi</th><th>Keterangan</th><th>Aksi</th></tr></thead>
         <tbody>${assets.map((asset, index) => {
-
-        const difference =
-          asset.actualQty - asset.registeredQty;
-
-        let differenceClass = "same";
-        let differenceText = "Jumlah sesuai";
-
-        if (!asset.exists) {
-
-          differenceClass = "less";
-          differenceText =
-            `Tidak ditemukan - Selisih -${asset.registeredQty}`;
-
-        } else if (difference < 0) {
-
-          differenceClass = "less";
-          differenceText =
-            `Kurang ${Math.abs(difference)} unit`;
-
-        } else if (difference > 0) {
-
-          differenceClass = "more";
-          differenceText =
-            `Lebih ${difference} unit`;
-
-        }
 
         return `<tr>
             <td class="number">${index + 1}</td>
-            <td><div class="asset-name">${asset.name}</div><div class="asset-meta">${asset.code} - Tercatat: ${asset.registeredQty}</div></td>
-            <td><div class="exist-buttons">
-
-              <button
-                type="button"
-                class="exist-btn ada ${
-                  asset.exists ? "active" : ""
-                }"
-                onclick="setExists(${index}, true)"
-              >
-                Ada
-              </button>
-
-              <button
-                type="button"
-                class="exist-btn tidak ${
-                  !asset.exists ? "active" : ""
-                }"
-                onclick="setExists(${index}, false)"
-              >
-                Tidak Ada
-              </button>
-
-            </div></td>
-            <td><input type="number" min="0" value="${asset.actualQty}" ${!asset.exists ? "disabled" : ""} onchange="setActualQty(${index}, this.value)"></td>
-            <td><select onchange="setCondition(${index}, this.value)">
-              ${["Baik", "Rusak Ringan", "Rusak Berat"].map(value => `<option value="${value}" ${asset.condition === value ? "selected" : ""}>${value}</option>`).join("")}
-            </select></td>
-            <td><textarea rows="2" placeholder="Catatan" onchange="setNote(${index}, this.value)">${asset.note}</textarea></td>
+            <td><input value="${escapeHtml(asset.name)}" list="assetSuggestions" onchange="setAssetName(${index}, this.value)" required></td>
+            <td><input type="number" min="1" value="${asset.actualQty}" onchange="setActualQty(${index}, this.value)"></td>
+            <td><input value="${escapeHtml(asset.itemUnit)}" list="itemUnitSuggestions" onchange="setItemUnit(${index}, this.value)" required></td>
+            <td><input value="${escapeHtml(asset.condition)}" list="conditionSuggestions" onchange="setCondition(${index}, this.value)" required></td>
+            <td><textarea rows="2" placeholder="Keterangan wajib diisi" onchange="setNote(${index}, this.value)" required>${escapeHtml(asset.note)}</textarea></td>
+            <td><button type="button" class="remove-asset-btn" onclick="removeManualAsset(${index})">Hapus</button></td>
           </tr>`;
 
   }).join("")}</tbody></table></div>`;
 
   updateSummary();
+  document.getElementById("submitButton").disabled = false;
 
 }
 
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[character]);
+}
 
-/*
-|--------------------------------------------------------------------------
-| ADA / TIDAK ADA
-|--------------------------------------------------------------------------
-*/
+function getAssetRecommendationContext() {
+  const roomName = document.getElementById("roomSelect").value.trim().toLowerCase();
+  const categoryRules = [
+    ["Ruang Kepala Sekolah", ["kepala sekolah"]],
+    ["Ruang HRD/Kepegawaian", ["hrd", "kepegawaian"]],
+    ["Laboratorium Komputer", ["laboratorium komputer", "lab komputer", "programming"]],
+    ["Laboratorium IPA", ["laboratorium ipa", "lab ipa"]],
+    ["Perpustakaan", ["perpustakaan"]],
+    ["Ruang Olahraga", ["olahraga", "gym"]],
+    ["Ruang Musik", ["ruang musik", "studio musik"]],
+    ["Aula/Ruang Pertemuan", ["aula", "ruang pertemuan"]],
+    ["UKS", ["uks"]],
+    ["Kantin/Dapur", ["kantin", "dapur", "ruang makan"]],
+    ["Ruang Ibadah", ["ibadah", "mushola", "masjid", "kapel"]],
+    ["Pos Keamanan/Area Umum", ["keamanan", "satpam", "pos jaga", "area umum"]],
+    ["Kantor/Tata Usaha", ["tata usaha", "kantor", "kurikulum", "administrasi"]],
+    ["Ruang Guru", ["ruang guru"]],
+    ["Ruang Kelas", ["kelas", "ruang pai", "matematika", "ruang bahasa", "inklusi", "digital art"]]
+  ];
+  const matchedCategory = categoryRules.find(([, keywords]) =>
+    keywords.some(keyword => roomName.includes(keyword))
+  )?.[0];
 
-function setExists(index, value) {
+  return {
+    category: matchedCategory || "Umum",
+    items: matchedCategory
+      ? assetRecommendationsByRoom[matchedCategory]
+      : generalAssetRecommendations,
+    note: matchedCategory === "Ruang Olahraga"
+      ? "Bola, kok, tali skipping, dan barang yang cepat rusak sebaiknya dicatat sebagai perlengkapan olahraga."
+      : ""
+  };
+}
 
-  const asset =
-    inventoryByRoom[selectedRoomId][index];
+function manualAssetForm() {
+  const recommendation = getAssetRecommendationContext();
+  return `<div class="add-asset">
+    <h3>Tambah inventaris ruangan</h3>
+    <p class="help-text" style="margin: -4px 0 12px;"><strong>Rekomendasi: ${escapeHtml(recommendation.category)}</strong>. Pilih dari saran atau tulis barang lain secara manual.</p>
+    <div class="add-asset-grid">
+      <div class="field">
+        <label for="manualAssetName">Nama Barang <span>*</span></label>
+        <input id="manualAssetName" list="assetSuggestions" placeholder="Pilih rekomendasi atau tulis manual" required />
+      </div>
+      <div class="field">
+        <label for="manualAssetQty">Jumlah <span>*</span></label>
+        <input id="manualAssetQty" type="number" min="1" value="1" required />
+      </div>
+      <div class="field">
+        <label for="manualAssetUnit">Satuan/Unit <span>*</span></label>
+        <input id="manualAssetUnit" list="itemUnitSuggestions" placeholder="Contoh: Unit, Buah, Set" required />
+      </div>
+      <div class="field">
+        <label for="manualAssetCondition">Kondisi <span>*</span></label>
+        <input id="manualAssetCondition" list="conditionSuggestions" value="Baik" required />
+      </div>
+      <div class="field full-width">
+        <label for="manualAssetNote">Keterangan <span>*</span></label>
+        <textarea id="manualAssetNote" rows="2" placeholder="Contoh: Digunakan di ruang kelas, kondisi normal" required></textarea>
+      </div>
+      <button type="button" class="secondary-btn full-width" onclick="addManualAsset()">Tambah ke Daftar Inventaris</button>
+    </div>
+    <datalist id="assetSuggestions">${recommendation.items.map(name => `<option value="${escapeHtml(name)}"></option>`).join("")}</datalist>
+    <datalist id="itemUnitSuggestions">${itemUnitRecommendations.map(name => `<option value="${name}"></option>`).join("")}</datalist>
+    <datalist id="conditionSuggestions">${conditionRecommendations.map(name => `<option value="${name}"></option>`).join("")}</datalist>
+    <p class="help-text">Kolom bertanda * wajib diisi. ${escapeHtml(recommendation.note)}</p>
+  </div>`;
+}
 
-  asset.exists = value;
-
-  if (!value) {
-
-    asset.actualQty = 0;
-
-  } else if (asset.actualQty === 0) {
-
-    asset.actualQty =
-      asset.registeredQty > 0
-        ? asset.registeredQty
-        : 1;
-
+function addManualAsset() {
+  const name = document.getElementById("manualAssetName").value.trim();
+  const qty = Number(document.getElementById("manualAssetQty").value);
+  const itemUnit = document.getElementById("manualAssetUnit").value.trim();
+  const condition = document.getElementById("manualAssetCondition").value.trim();
+  const note = document.getElementById("manualAssetNote").value.trim();
+  if (!name || !Number.isInteger(qty) || qty < 1 || !itemUnit || !condition || !note) {
+    alert("Nama barang, jumlah, satuan/unit, kondisi, dan keterangan wajib diisi.");
+    return;
   }
-
+  const assets = inventoryByRoom[selectedRoomId] || (inventoryByRoom[selectedRoomId] = []);
+  if (assets.some(asset => asset.name.toLowerCase() === name.toLowerCase())) {
+    alert("Inventaris tersebut sudah ada di daftar.");
+    return;
+  }
+  assets.push({
+    id: null,
+    code: `INV-${Date.now()}`,
+    name,
+    registeredQty: qty,
+    actualQty: qty,
+    itemUnit,
+    exists: true,
+    condition,
+    note
+  });
   renderAssets();
+}
 
+
+function removeManualAsset(index) {
+  inventoryByRoom[selectedRoomId].splice(index, 1);
+  renderAssets();
 }
 
 
@@ -1246,13 +834,13 @@ function setActualQty(index, value) {
 
   let qty = Number(value);
 
-  if (qty < 0 || Number.isNaN(qty)) {
-    qty = 0;
+  if (qty < 1 || Number.isNaN(qty)) {
+    qty = 1;
   }
 
   asset.actualQty = qty;
-
-  asset.exists = qty > 0;
+  asset.registeredQty = qty;
+  asset.exists = true;
 
   renderAssets();
 
@@ -1274,6 +862,15 @@ function setNote(index, value) {
 
 function setCondition(index, value) {
   inventoryByRoom[selectedRoomId][index].condition = value;
+  updateSummary();
+}
+
+function setAssetName(index, value) {
+  inventoryByRoom[selectedRoomId][index].name = value.trim();
+}
+
+function setItemUnit(index, value) {
+  inventoryByRoom[selectedRoomId][index].itemUnit = value.trim();
 }
 
 
@@ -1288,11 +885,13 @@ function updateSummary() {
   const assets =
     inventoryByRoom[selectedRoomId] || [];
 
-  const exists =
-    assets.filter(asset => asset.exists).length;
+  const totalItems = assets.reduce(
+    (total, asset) => total + Number(asset.actualQty || 0),
+    0
+  );
 
-  const missing =
-    assets.filter(asset => !asset.exists).length;
+  const needsRepair =
+    assets.filter(asset => asset.condition !== "Baik").length;
 
   document.getElementById(
     "summaryAssets"
@@ -1300,11 +899,11 @@ function updateSummary() {
 
   document.getElementById(
     "summaryExists"
-  ).textContent = exists;
+  ).textContent = totalItems;
 
   document.getElementById(
     "summaryMissing"
-  ).textContent = missing;
+  ).textContent = needsRepair;
 
 }
 
@@ -1342,10 +941,63 @@ async function submitInventory() {
 
   }
 
-  const room =
-    rooms.find(
-      item => item.id === selectedRoomId
-    );
+  if ((inventoryByRoom[selectedRoomId] || []).length === 0) {
+    alert("Tambahkan minimal satu inventaris sebelum menyimpan pemeriksaan.");
+    return;
+  }
+
+  const incompleteItem = (inventoryByRoom[selectedRoomId] || []).find(asset =>
+    !asset.name?.trim() ||
+    !Number.isInteger(Number(asset.actualQty)) ||
+    Number(asset.actualQty) < 1 ||
+    !asset.itemUnit?.trim() ||
+    !asset.condition?.trim() ||
+    !asset.note?.trim()
+  );
+
+  if (incompleteItem) {
+    alert("Lengkapi nama barang, jumlah, satuan/unit, kondisi, dan keterangan pada setiap inventaris.");
+    return;
+  }
+
+  const normalizedNames = (inventoryByRoom[selectedRoomId] || []).map(asset => asset.name.trim().toLowerCase());
+  if (new Set(normalizedNames).size !== normalizedNames.length) {
+    alert("Nama inventaris tidak boleh duplikat dalam satu pemeriksaan.");
+    return;
+  }
+
+  const submitButton = document.getElementById("submitButton");
+  submitButton.disabled = true;
+  submitButton.textContent = "Menyimpan...";
+
+  let room = rooms.find(item => item.id === selectedRoomId);
+  const unit = document.getElementById("unitSelect").value;
+  const roomName = document.getElementById("roomSelect").value.trim();
+
+  if (!room && db) {
+    const roomCode = `MAN-${Date.now().toString().slice(-8)}`;
+    const { data: newRoom, error: roomError } = await db
+      .from("rooms")
+      .insert({ code: roomCode, name: roomName, unit, pic_name: teacherName, status: "pending_verification", description: "Dibuat dari form guru; perlu verifikasi admin." })
+      .select("id, code, name, description, unit, pic_name")
+      .single();
+    if (roomError) {
+      alert("Gagal menyimpan ruangan baru ke Supabase. Pastikan skema database terbaru sudah dijalankan.");
+      console.error(roomError);
+      submitButton.disabled = false;
+      submitButton.textContent = "Simpan Pemeriksaan";
+      return;
+    }
+    room = newRoom;
+    rooms.push(room);
+    const manualAssets = inventoryByRoom[selectedRoomId] || [];
+    selectedRoomId = room.id;
+    inventoryByRoom[room.id] = manualAssets;
+  }
+
+  if (!room) {
+    room = { id: selectedRoomId, code: "MANUAL", name: roomName };
+  }
 
   const assets =
     inventoryByRoom[selectedRoomId] || [];
@@ -1360,6 +1012,8 @@ async function submitInventory() {
 
     room_name: room.name,
 
+    unit,
+
     checked_at:
       new Date().toISOString(),
 
@@ -1370,6 +1024,8 @@ async function submitInventory() {
       asset_code: asset.code,
 
       asset_name: asset.name,
+
+      item_unit: asset.itemUnit,
 
       registered_qty:
         asset.registeredQty,
@@ -1405,6 +1061,7 @@ async function submitInventory() {
         room_id: result.room_id,
         room_code: result.room_code,
         room_name: result.room_name,
+        unit: result.unit,
         checked_at: result.checked_at
       })
       .select("id")
@@ -1413,6 +1070,8 @@ async function submitInventory() {
     if (inspectionError) {
       alert("Gagal menyimpan pemeriksaan ke Supabase.");
       console.error(inspectionError);
+      submitButton.disabled = false;
+      submitButton.textContent = "Simpan Pemeriksaan";
       return;
     }
 
@@ -1421,6 +1080,7 @@ async function submitInventory() {
       asset_id: asset.asset_id,
       asset_code: asset.asset_code,
       asset_name: asset.asset_name,
+      item_unit: asset.item_unit,
       registered_qty: asset.registered_qty,
       actual_qty: asset.actual_qty,
       exists: asset.exists,
@@ -1434,12 +1094,14 @@ async function submitInventory() {
       .insert(rows);
 
     if (detailError) {
-      alert("Data utama tersimpan, tetapi detail aset gagal disimpan.");
+      alert("Data utama tersimpan, tetapi detail inventaris gagal disimpan.");
       console.error(detailError);
+      submitButton.textContent = "Detail Gagal Tersimpan";
       return;
     }
 
     alert("Pemeriksaan berhasil disimpan ke Supabase.");
+    submitButton.textContent = "Pemeriksaan Tersimpan";
     return;
   }
 
@@ -1447,6 +1109,7 @@ async function submitInventory() {
     "Pemeriksaan berhasil disimpan!\n\n" +
     "Mode Supabase belum aktif. Isi SUPABASE_URL dan SUPABASE_ANON_KEY."
   );
+  submitButton.textContent = "Pemeriksaan Tersimpan";
 
 }
 
