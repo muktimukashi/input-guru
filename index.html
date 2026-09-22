@@ -149,6 +149,7 @@
     .add-asset-grid .field { margin: 0; }
     .add-asset-grid .full-width { grid-column: 1 / -1; }
     .add-asset-grid label span { color: #dc2626; }
+    .add-asset-grid label .optional-label { color: #64748b; font-weight: 500; }
     .secondary-btn { border: 0; background: #0f766e; color: #fff; padding: 10px 12px; border-radius: 10px; font-weight: 700; cursor: pointer; }
     .remove-asset-btn { border: 1px solid #fecaca; background: #fff1f2; color: #be123c; padding: 9px 11px; border-radius: 9px; font-weight: 700; cursor: pointer; }
     .remove-asset-btn:hover { background: #ffe4e6; }
@@ -695,7 +696,7 @@
             <td><input type="number" min="1" value="${asset.actualQty}" onchange="setActualQty(${index}, this.value)"></td>
             <td><input value="${escapeHtml(asset.itemUnit)}" list="itemUnitSuggestions" onchange="setItemUnit(${index}, this.value)" required></td>
             <td><input value="${escapeHtml(asset.condition)}" list="conditionSuggestions" onchange="setCondition(${index}, this.value)" required></td>
-            <td><textarea rows="2" placeholder="Keterangan wajib diisi" onchange="setNote(${index}, this.value)" required>${escapeHtml(asset.note)}</textarea></td>
+            <td><textarea rows="2" placeholder="Opsional" onchange="setNote(${index}, this.value)">${escapeHtml(asset.note)}</textarea></td>
             <td><button type="button" class="remove-asset-btn" onclick="removeManualAsset(${index})">Hapus</button></td>
           </tr>`;
 
@@ -773,8 +774,8 @@ function manualAssetForm() {
         <input id="manualAssetCondition" list="conditionSuggestions" value="Baik" required />
       </div>
       <div class="field full-width">
-        <label for="manualAssetNote">Keterangan <span>*</span></label>
-        <textarea id="manualAssetNote" rows="2" placeholder="Contoh: Digunakan di ruang kelas, kondisi normal" required></textarea>
+        <label for="manualAssetNote">Keterangan <span class="optional-label">(opsional)</span></label>
+        <textarea id="manualAssetNote" rows="2" placeholder="Contoh: Digunakan di ruang kelas, kondisi normal"></textarea>
       </div>
       <button type="button" class="secondary-btn full-width" onclick="addManualAsset()">Tambah ke Daftar Inventaris</button>
     </div>
@@ -791,8 +792,8 @@ function addManualAsset() {
   const itemUnit = document.getElementById("manualAssetUnit").value.trim();
   const condition = document.getElementById("manualAssetCondition").value.trim();
   const note = document.getElementById("manualAssetNote").value.trim();
-  if (!name || !Number.isInteger(qty) || qty < 1 || !itemUnit || !condition || !note) {
-    alert("Nama barang, jumlah, satuan/unit, kondisi, dan keterangan wajib diisi.");
+  if (!name || !Number.isInteger(qty) || qty < 1 || !itemUnit || !condition) {
+    alert("Nama barang, jumlah, satuan/unit, dan kondisi wajib diisi.");
     return;
   }
   const assets = inventoryByRoom[selectedRoomId] || (inventoryByRoom[selectedRoomId] = []);
@@ -951,12 +952,11 @@ async function submitInventory() {
     !Number.isInteger(Number(asset.actualQty)) ||
     Number(asset.actualQty) < 1 ||
     !asset.itemUnit?.trim() ||
-    !asset.condition?.trim() ||
-    !asset.note?.trim()
+    !asset.condition?.trim()
   );
 
   if (incompleteItem) {
-    alert("Lengkapi nama barang, jumlah, satuan/unit, kondisi, dan keterangan pada setiap inventaris.");
+    alert("Lengkapi nama barang, jumlah, satuan/unit, dan kondisi pada setiap inventaris.");
     return;
   }
 
@@ -978,12 +978,13 @@ async function submitInventory() {
     const roomCode = `MAN-${Date.now().toString().slice(-8)}`;
     const { data: newRoom, error: roomError } = await db
       .from("rooms")
-      .insert({ code: roomCode, name: roomName, unit, pic_name: teacherName, status: "pending_verification", description: "Dibuat dari form guru; perlu verifikasi admin." })
-      .select("id, code, name, description, unit, pic_name")
+      .insert({ code: roomCode, name: roomName, unit, pic_name: teacherName })
+      .select("id, code, name, unit, pic_name")
       .single();
     if (roomError) {
-      alert("Gagal menyimpan ruangan baru ke Supabase. Pastikan skema database terbaru sudah dijalankan.");
       console.error(roomError);
+      const detail = roomError.message ? `\n\nDetail: ${roomError.message}` : "";
+      alert(`Gagal menyimpan ruangan baru ke Supabase. Jalankan migrasi terbaru dan pastikan policy RLS mengizinkan insert.${detail}`);
       submitButton.disabled = false;
       submitButton.textContent = "Simpan Pemeriksaan";
       return;

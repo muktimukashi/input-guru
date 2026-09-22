@@ -57,3 +57,67 @@ create index if not exists inventory_checks_room_checked_idx
 
 create index if not exists inventory_check_items_check_idx
   on inventory_check_items (inventory_check_id);
+
+-- Form guru memakai anon key. Policy berikut memberi akses minimum yang
+-- dibutuhkan form untuk membaca ruangan dan menyimpan hasil pemeriksaan.
+alter table rooms enable row level security;
+alter table inventory_checks enable row level security;
+alter table inventory_check_items enable row level security;
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'rooms'
+      and policyname = 'rooms_public_select'
+  ) then
+    create policy rooms_public_select on rooms
+      for select to anon, authenticated using (true);
+  end if;
+
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'rooms'
+      and policyname = 'rooms_public_insert'
+  ) then
+    create policy rooms_public_insert on rooms
+      for insert to anon, authenticated with check (true);
+  end if;
+
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'inventory_checks'
+      and policyname = 'inventory_checks_public_select'
+  ) then
+    create policy inventory_checks_public_select on inventory_checks
+      for select to anon, authenticated using (true);
+  end if;
+
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'inventory_checks'
+      and policyname = 'inventory_checks_public_insert'
+  ) then
+    create policy inventory_checks_public_insert on inventory_checks
+      for insert to anon, authenticated with check (true);
+  end if;
+
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'inventory_check_items'
+      and policyname = 'inventory_check_items_public_select'
+  ) then
+    create policy inventory_check_items_public_select on inventory_check_items
+      for select to anon, authenticated using (true);
+  end if;
+
+  if not exists (
+    select 1 from pg_policies
+    where schemaname = 'public' and tablename = 'inventory_check_items'
+      and policyname = 'inventory_check_items_public_insert'
+  ) then
+    create policy inventory_check_items_public_insert on inventory_check_items
+      for insert to anon, authenticated with check (true);
+  end if;
+end
+$$;
