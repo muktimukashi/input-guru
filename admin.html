@@ -239,6 +239,55 @@
       background: #f8fafc;
     }
 
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      border-top: 1px solid #e5e7eb;
+      background: #fff;
+    }
+
+    .pagination-info {
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .page-button {
+      min-width: 38px;
+      min-height: 38px;
+      padding: 8px 11px;
+      border: 1px solid #dbe2ea;
+      border-radius: 8px;
+      background: #fff;
+      color: #334155;
+      font-weight: 600;
+    }
+
+    .page-button:hover:not(:disabled) {
+      border-color: #49945f;
+      color: #39774c;
+    }
+
+    .page-button.active {
+      border-color: #49945f;
+      background: #49945f;
+      color: #fff;
+    }
+
+    .page-button:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
+
     .badge {
       padding: 5px 9px;
       border-radius: 20px;
@@ -564,6 +613,11 @@
         grid-template-columns: 1fr;
       }
 
+      .pagination {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
       .room-info {
         align-items: flex-start;
         flex-direction: column;
@@ -740,6 +794,11 @@
 
         </div>
 
+        <nav class="pagination" id="pagination" aria-label="Navigasi halaman daftar ruangan">
+          <p class="pagination-info" id="paginationInfo"></p>
+          <div class="pagination-controls" id="paginationControls"></div>
+        </nav>
+
       </section>
 
     </main>
@@ -847,6 +906,8 @@
     let inventoryByRoom = {};
 
     let selectedRoomId = null;
+    const ROOMS_PER_PAGE = 10;
+    let currentPage = 1;
 
     /*
     |--------------------------------------------------------------------------
@@ -965,6 +1026,10 @@
       updateStats();
 
       const filteredRooms = getFilteredRooms();
+      const totalPages = Math.max(1, Math.ceil(filteredRooms.length / ROOMS_PER_PAGE));
+      currentPage = Math.min(currentPage, totalPages);
+      const pageStart = (currentPage - 1) * ROOMS_PER_PAGE;
+      const visibleRooms = filteredRooms.slice(pageStart, pageStart + ROOMS_PER_PAGE);
 
       const table =
         document.getElementById("roomTable");
@@ -979,10 +1044,11 @@
             </td>
           </tr>
         `;
+        renderPagination(0);
         return;
       }
 
-      filteredRooms.forEach(room => {
+      visibleRooms.forEach(room => {
 
         const badge =
           room.status === "done"
@@ -1038,6 +1104,55 @@
 
       });
 
+      renderPagination(filteredRooms.length);
+
+    }
+
+    function renderPagination(totalItems) {
+      const pagination = document.getElementById("pagination");
+      const info = document.getElementById("paginationInfo");
+      const controls = document.getElementById("paginationControls");
+
+      if (totalItems === 0) {
+        pagination.hidden = true;
+        info.textContent = "";
+        controls.innerHTML = "";
+        return;
+      }
+
+      pagination.hidden = false;
+      const totalPages = Math.ceil(totalItems / ROOMS_PER_PAGE);
+      const firstItem = (currentPage - 1) * ROOMS_PER_PAGE + 1;
+      const lastItem = Math.min(currentPage * ROOMS_PER_PAGE, totalItems);
+      info.textContent = `Menampilkan ${firstItem}–${lastItem} dari ${totalItems} ruangan`;
+      controls.innerHTML = "";
+
+      controls.appendChild(createPageButton("Sebelumnya", currentPage - 1, currentPage === 1));
+
+      let firstPage = Math.max(1, currentPage - 2);
+      let lastPage = Math.min(totalPages, firstPage + 4);
+      firstPage = Math.max(1, lastPage - 4);
+
+      for (let page = firstPage; page <= lastPage; page += 1) {
+        controls.appendChild(createPageButton(String(page), page, false, page === currentPage));
+      }
+
+      controls.appendChild(createPageButton("Berikutnya", currentPage + 1, currentPage === totalPages));
+    }
+
+    function createPageButton(label, page, disabled = false, active = false) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `page-button${active ? " active" : ""}`;
+      button.textContent = label;
+      button.disabled = disabled;
+      if (active) button.setAttribute("aria-current", "page");
+      button.addEventListener("click", () => {
+        currentPage = page;
+        renderRooms();
+        document.getElementById("data").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      return button;
     }
 
     function updateStats() {
@@ -1311,14 +1426,20 @@
       .getElementById("searchInput")
       .addEventListener(
         "input",
-        renderRooms
+        () => {
+          currentPage = 1;
+          renderRooms();
+        }
       );
 
     document
       .getElementById("statusFilter")
       .addEventListener(
         "change",
-        renderRooms
+        () => {
+          currentPage = 1;
+          renderRooms();
+        }
       );
 
     document
