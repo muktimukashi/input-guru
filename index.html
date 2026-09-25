@@ -302,6 +302,8 @@
 
 <div class="card">
 
+  <p class="help-text" id="draftStatus" role="status" aria-live="polite">Draft otomatis disimpan di browser ini. Data masuk ke sistem setelah klik Simpan Pemeriksaan.</p>
+
   <div class="field">
     <label>PIC / Guru Penanggung Jawab</label>
 
@@ -309,16 +311,15 @@
       type="text"
       id="teacherName"
       placeholder="Contoh: Armand Maulana"
-      list="picSuggestions"
+      autocomplete="off"
     />
-    <datalist id="picSuggestions"></datalist>
   </div>
 
   <div class="field">
     <label>Unit</label>
     <select id="unitSelect" onchange="handleUnitChange()">
       <option value="">-- Pilih unit --</option>
-      <option>KBTK</option><option>SD</option><option>SMP</option><option>Manajemen</option><option>Lainnya</option>
+      <option>KBTK</option><option>SD</option><option>SMP</option><option>Admin</option><option>Logistik</option><option>Security</option><option>BPA</option><option>HRD</option><option>Humas</option><option>Lainnya</option>
     </select>
   </div>
 
@@ -364,6 +365,18 @@
   <span class="asset-count" id="assetCount"></span>
 </div>
 
+<div class="card">
+  <h3>Isi melalui Excel</h3>
+  <p class="help-text">1. Download template dan isi sheet Inventaris. 2. Pilih unit dan ruangan di atas. 3. Upload file untuk menambahkan barang ke daftar, lalu periksa dan klik Simpan Pemeriksaan.</p>
+  <button type="button" class="secondary-btn" onclick="downloadInventoryTemplate()">Download Template Excel</button>
+  <div class="field" style="margin-top: 14px">
+    <label for="inventoryExcel">Upload Excel (.xlsx)</label>
+    <input id="inventoryExcel" type="file" accept=".xlsx" onchange="importInventoryExcel(this)" aria-describedby="excelRules excelStatus" />
+  </div>
+  <p class="help-text" id="excelRules">Satu file untuk satu ruangan. Maksimal 5 MB dan 1.000 barang. Nama barang, jumlah (bilangan bulat minimal 1), satuan, dan kondisi wajib diisi. Keterangan opsional. Nama barang tidak boleh duplikat. Data upload ditambahkan ke daftar yang sudah ada.</p>
+  <p class="help-text" id="excelStatus" role="status" aria-live="polite" style="white-space: pre-line; max-height: 240px; overflow: auto"></p>
+</div>
+
 <div id="assetList">
 
   <div class="empty">
@@ -405,7 +418,7 @@
       KBTK: ["KBTK — Kelas A1", "KBTK — Kelas A2", "KBTK — Kelas A3", "KBTK — Kelas B1", "KBTK — Kelas B2", "KBTK — Kelas B3", "KBTK — Kelas B4", "KBTK — Ruang Sentra Pura-Pura", "KBTK — Ruang Kepala Sekolah"],
       SD: ["Kelas 1A", "Kelas 1B", "Kelas 1C", "Kelas 2A", "Kelas 2B", "Kelas 2C","Kelas 3A", "Kelas 3B", "Kelas 3C","Kelas 4A", "Kelas 4B", "Kelas 4C","Kelas 5A", "Kelas 5B", "Kelas 5C","Kelas 6A", "Kelas 6B", "Kelas 6C","Ruang Guru SD - 1", "Ruang Guru SD - 2"],
       SMP: ["SMP — Kantin / Ruang Makan", "SMP — Kelas 7A / Ruang PAI", "SMP — Kelas 7B", "SMP — Kelas 7C / Ruang Digital Art", "SMP — Kelas 8A", "SMP — Kelas 8B / Ruang Matematika", "SMP — Kelas 8C", "SMP — Ruang Inklusi", "SMP — Kelas 9A / Ruang IPS", "SMP — Kelas 9B", "SMP — Kelas 9C / Ruang Bahasa", "SMP — Ruang Musik", "SMP — Laboratorium IPA", "SMP — Laboratorium Komputer", "SMP — Ruang Programming", "SMP — UKS", "SMP — Ruang Kepala Sekolah", "SMP — Ruang Guru", "SMP — Ruang OSIS", "SMP — Perpustakaan", "SMP — Ruang Konsultasi Psikologi"],
-      Manajemen: ["Ruang Kepala Sekolah", "Ruang Tata Usaha", "Ruang Kurikulum", "Ruang BK", "Aula", "UKS", "Gudang"]
+      Admin: ["Ruang Kepala Sekolah", "Ruang Tata Usaha", "Ruang Kurikulum", "Ruang BK", "Aula", "UKS", "Gudang"]
     };
     const assetRecommendationsByRoom = {
       "Ruang Kelas": [
@@ -520,8 +533,6 @@
     }
 
     function updateSuggestions() {
-      const pics = new Set(rooms.map(room => room.pic_name).filter(Boolean));
-      document.getElementById("picSuggestions").innerHTML = [...pics].sort().map(name => `<option value="${name}"></option>`).join("");
       updateRoomRecommendations();
     }
 
@@ -681,6 +692,7 @@
 
         updateSummary();
         document.getElementById("submitButton").disabled = true;
+        window.inventoryDraft?.save();
 
         return;
 
@@ -704,6 +716,7 @@
 
   updateSummary();
   document.getElementById("submitButton").disabled = false;
+  window.inventoryDraft?.save();
 
 }
 
@@ -812,12 +825,14 @@ function addManualAsset() {
     condition,
     note
   });
+  window.inventoryDraft?.edited();
   renderAssets();
 }
 
 
 function removeManualAsset(index) {
   inventoryByRoom[selectedRoomId].splice(index, 1);
+  window.inventoryDraft?.edited();
   renderAssets();
 }
 
@@ -992,8 +1007,11 @@ async function submitInventory() {
     room = newRoom;
     rooms.push(room);
     const manualAssets = inventoryByRoom[selectedRoomId] || [];
+    delete inventoryByRoom[selectedRoomId];
     selectedRoomId = room.id;
     inventoryByRoom[room.id] = manualAssets;
+    manuallyEnteredRooms.add(String(room.id));
+    window.inventoryDraft?.save();
   }
 
   if (!room) {
@@ -1101,16 +1119,17 @@ async function submitInventory() {
       return;
     }
 
+    window.inventoryDraft?.complete();
     alert("Terima kasih. Pemeriksaan inventaris berhasil disimpan dan data ruangan sudah tercatat.");
     submitButton.textContent = "Pemeriksaan Tersimpan";
     return;
   }
 
   alert(
-    "Pemeriksaan berhasil disimpan!\n\n" +
-    "Mode Supabase belum aktif. Isi SUPABASE_URL dan SUPABASE_ANON_KEY."
+    "Pemeriksaan belum dikirim karena koneksi penyimpanan belum tersedia. Draft tetap disimpan di browser ini."
   );
-  submitButton.textContent = "Pemeriksaan Tersimpan";
+  submitButton.disabled = false;
+  submitButton.textContent = "Simpan Pemeriksaan";
 
 }
 
@@ -1121,9 +1140,12 @@ async function submitInventory() {
 |--------------------------------------------------------------------------
 */
 
-loadRooms();
+// Draft is restored before loading room suggestions from the server.
 
   </script>
 
+<script src="vendor/xlsx.full.min.js"></script>
+<script src="excel-import.js"></script>
+<script src="inventory-draft.js"></script>
 </body>
 </html>
